@@ -21,19 +21,19 @@ public class Worker : IHostedService
 
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
-        if (await manager.FindByClientIdAsync("console", cancellationToken) is null)
+        if (await manager.FindByClientIdAsync("react-client", cancellationToken) is null)
         {
             await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
-                ClientId = "console",
-                ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C207",
+                ClientId = "react-client",
+                DisplayName = "React client",
                 RedirectUris =
                 {
-                    new Uri($"https://oauth.pstmn.io/v1/callback")
+                    new Uri($"https://localhost:3000/signin-oidc")
                 },
                 PostLogoutRedirectUris =
                 {
-                    new Uri($"https://oauth.pstmn.io/v1/callback")
+                    new Uri($"https://localhost:3000/signout-callback-oidc")
                 },
                 Permissions =
                 {
