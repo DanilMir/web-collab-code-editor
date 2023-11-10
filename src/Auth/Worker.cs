@@ -29,16 +29,19 @@ public class Worker : IHostedService
                 DisplayName = "React client",
                 RedirectUris =
                 {
+                    //todo: url to env
                     new Uri($"https://localhost:3000/signin-oidc")
                 },
                 PostLogoutRedirectUris =
                 {
+                    //todo: url to env
                     new Uri($"https://localhost:3000/signout-callback-oidc")
                 },
                 Permissions =
                 {
                     Permissions.Endpoints.Authorization,
                     Permissions.Endpoints.Token,
+                    Permissions.Endpoints.Logout,
                     Permissions.GrantTypes.AuthorizationCode,
                     Permissions.GrantTypes.RefreshToken,
                     Permissions.ResponseTypes.Code,
@@ -48,7 +51,7 @@ public class Worker : IHostedService
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
                 }
-            }, cancellationToken);
+            });
         }
     }
 
