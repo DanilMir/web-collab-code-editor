@@ -89,21 +89,21 @@ builder.Services.AddHostedService<Worker>();
 
 
 // CORS policy to allow SwaggerUI and React clients
-// builder.Services.AddCors(
-//     options =>
-//     {
-//         options.AddPolicy(
-//             "default", policy =>
-//             {
-//                 policy
-//                     .WithOrigins(
-//                         builder.Configuration.GetServiceUri("weather-api")!.ToString().TrimEnd('/'),
-//                         builder.Configuration.GetServiceUri("weather-summary-api")!.ToString().TrimEnd('/'),
-//                         builder.Configuration.GetServiceUri("react-client")!.ToString().TrimEnd('/'))
-//                     .AllowAnyHeader()
-//                     .AllowAnyMethod();
-//             });
-//     });
+builder.Services.AddCors(
+    options =>
+    {
+        options.AddPolicy(
+            "default", policy =>
+            {
+                policy
+                    .WithOrigins(
+                        "http://localhost:3000",
+                        "https://localhost:3000"
+                        )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+    });
 
 var app = builder.Build();
 
@@ -113,7 +113,7 @@ app.UseStaticFiles();
 
 
 app.UseRouting();
-// app.UseCors("default");
+app.UseCors("default");
 
 app.UseAuthentication();
 app.UseAuthorization();
