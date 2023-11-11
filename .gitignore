@@ -351,3 +351,4 @@ MigrationBackup/
 
 .idea
 .idea/*
+src/Auth/Auth.sln
