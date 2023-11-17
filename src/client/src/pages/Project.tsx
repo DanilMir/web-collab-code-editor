@@ -28,6 +28,7 @@ export default function Project() {
                 width="100wh"
                 language="javascript"
                 readOnly={false}
+                room={id!.toString()}
             />
         </>
     )
