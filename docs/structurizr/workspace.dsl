@@ -10,75 +10,69 @@ workspace {
         user = person "Customer"
         
         softwareSystem = softwareSystem "Web Collab Code Editor" {
-
-            frontend = group "frontend" {
                 webClient = container "Web client" "React frontend app" {
                     tags "frontend, react"
                     technology "React"
                 }
-            }
 
-            backend = group "backend" {
-                identityService = group "Auth" {
-                    identityApi = container "Auth Service" {
-                        description "User authentication and authorization service."
-                        tags "backend, c-sharp"
-                        technology "ASP.NET Core"                    
-                    }
+                auth = container "Auth Service" {
+                    description "User authentication and authorization service."
+                    tags "backend, c-sharp"
+                    technology "ASP.NET Core"                    
+                }
 
-                    container "Auth Database" {
-                        tags "db, postgres"
-                        technology "PostgreSQL"
-
-
-                        identityApi -> this
-                    }
+                authDb = container "Auth Database" {
+                    tags "db, postgres"
+                    technology "PostgreSQL"
                 }
                 
-                projectService = group "Project Management" {
-                    projectManagement = container "Project Management Service" {
-                        description "Service for creating and managing code projects."
-                        tags "backend, c-sharp"
-                        technology "ASP.NET Core"  
-                    }
-
-                    s3 = container "S3 Service" {
-                        tags "cloud, minio"
-                        technology "Minio"
-                    }
-
-                    projectManagement -> s3
+                projectManagement = container "Project Management Service" {
+                    description "Service for creating and managing code projects."
+                    tags "backend, c-sharp"
+                    technology "ASP.NET Core"  
                 }
 
-
-                group "Collab" {
-                    collab = container "Collab Service" {
-                        description "Synchronization of code changes in real-time."
-                        tags "backend, c-sharp"
-                        technology "ASP.NET Core"        
-                    }
+                files = container "Files Service" {
+                    description "Service for file uploading, downloading, processing"
+                    tags "backend, c-sharp"
+                    technology "ASP.NET Core"
                 }
 
-                group "Virtual Environments" {
-                    virtual = container "Virtual Environments Service" {
-                        description "Isolated execution environments for code."
-                        tags "backend, c-sharp"
-                        technology "ASP.NET Core"        
-                    }
+                s3 = container "S3 Service" {
+                    tags "cloud, minio"
+                    technology "Minio"
                 }
-
+                
+                collab = container "Collab Service" {
+                    description "Synchronization of code changes in real-time."
+                    tags "backend, c-sharp"
+                    technology "ASP.NET Core"        
+                }
+                                
+                virtual = container "Virtual Environments Service" {
+                    description "Isolated execution environments for code."
+                    tags "backend, c-sharp"
+                    technology "ASP.NET Core"        
+                }
+                
                 apiGateway = container "API Gateway" {
                     description "Gateway for managing and exposing API endpoints."
                     technology "API Gateway"
                     tags "API, Gateway"
                 }
 
-                apiGateway -> identityApi
+
+                files -> s3
+                projectManagement -> files "Manage project source code"
+                projectManagement -> virtual "Send project code"
+                auth -> authDb "Save credentials"
+                collab -> files "Sync code with storage"
+                auth -> files "Upload user profile picture"
+                
+                apiGateway -> files
+                apiGateway -> auth
                 apiGateway -> collab
-                apiGateway -> virtual
-                apiGateway -> projectManagement
-            }
-            
+                apiGateway -> projectManagement    
         }
 
         webClient -> apiGateway
@@ -94,7 +88,6 @@ workspace {
 
         container softwareSystem "Containers"{
             include *
-            autoLayout
             autoLayout lr
         }
 
@@ -166,7 +159,7 @@ workspace {
             }
 
             relationship "Relationship" {
-                routing Orthogonal
+                # routing Orthogonal
             }
         }
 

@@ -1,13 +1,53 @@
 using Auth;
 using Auth.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-
-
+builder.Services.AddSwaggerGen(
+    c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth API", Version = "v1" });
+        c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+        // c.AddSecurityDefinition(
+        //     "oauth",
+        //     new OpenApiSecurityScheme
+        //     {
+        //         Flows = new OpenApiOAuthFlows
+        //         {
+        //             ClientCredentials = new OpenApiOAuthFlow
+        //             {
+        //                 Scopes = new Dictionary<string, string>
+        //                 {
+        //                     ["api"] = "api scope description"
+        //                 },
+                        
+        //             },
+        //         },
+        //         In = ParameterLocation.Header,
+        //         Name = HeaderNames.Authorization,
+        //         Type = SecuritySchemeType.OAuth2
+        //     }
+        // );
+        c.AddSecurityRequirement(
+            new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                            { Type = ReferenceType.SecurityScheme, Id = "oauth" },
+                    },
+                    new[] { "api" }
+                }
+            }
+        );
+    }
+);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // Configure Entity Framework Core to use Microsoft SQL Server.
@@ -108,6 +148,13 @@ builder.Services.AddCors(
 var app = builder.Build();
 
 // app.UseDeveloperExceptionPage();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

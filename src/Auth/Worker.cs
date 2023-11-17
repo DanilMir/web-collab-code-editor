@@ -29,12 +29,12 @@ public class Worker : IHostedService
                 DisplayName = "React client",
                 RedirectUris =
                 {
-                    //todo: url to env
+                    //TODO: url to env
                     new Uri($"https://localhost:3000/signin-oidc")
                 },
                 PostLogoutRedirectUris =
                 {
-                    //todo: url to env
+                    //TODO: url to env
                     new Uri($"https://localhost:3000/signout-callback-oidc")
                 },
                 Permissions =
