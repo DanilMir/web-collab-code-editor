@@ -3,6 +3,7 @@ using Auth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using OpenIddict.Validation.SystemNetHttp;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -110,7 +111,8 @@ builder.Services.AddOpenIddict()
             .EnableTokenEndpointPassthrough()
             .EnableUserinfoEndpointPassthrough()
             .EnableVerificationEndpointPassthrough()
-            .EnableStatusCodePagesIntegration();
+            .EnableStatusCodePagesIntegration()
+            .DisableTransportSecurityRequirement();
     })
 
     // Register the OpenIddict validation components.
@@ -127,6 +129,11 @@ builder.Services.AddOpenIddict()
 // Note: in a real world application, this step should be part of a setup script.
 builder.Services.AddHostedService<Worker>();
 
+builder.Services.AddHttpClient(typeof(OpenIddictValidationSystemNetHttpOptions).Assembly.GetName().Name)
+    .ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
 
 // CORS policy to allow SwaggerUI and React clients
 builder.Services.AddCors(

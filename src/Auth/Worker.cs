@@ -30,12 +30,12 @@ public class Worker : IHostedService
                 RedirectUris =
                 {
                     //TODO: url to env
-                    new Uri($"https://localhost:3000/signin-oidc")
+                    new Uri($"http://localhost:3000/signin-oidc")
                 },
                 PostLogoutRedirectUris =
                 {
                     //TODO: url to env
-                    new Uri($"https://localhost:3000/signout-callback-oidc")
+                    new Uri($"http://localhost:3000/signout-callback-oidc")
                 },
                 Permissions =
                 {
