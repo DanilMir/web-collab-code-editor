@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  auth-db:
+    image: postgres:15
+  
+  auth:
+    image: auth
+    build: ./src/Auth/
+    depends_on:
+      - auth-db
+  
+  client:
+    image: client
+    build: ./src/client/
+  
