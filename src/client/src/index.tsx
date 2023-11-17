@@ -16,10 +16,10 @@ import {AuthProvider} from "react-oidc-context";
 
 
 const oidcConfig = {
-    authority: 'https://localhost:7099',
+    authority: 'http://localhost:5001',
     client_id: 'react-client',
-    redirect_uri: 'https://localhost:3000/signin-oidc',
-    post_logout_redirect_uri: 'https://localhost:3000/signout-callback-oidc',
+    redirect_uri: 'http://localhost:3000/signin-oidc',
+    post_logout_redirect_uri: 'http://localhost:3000/signout-callback-oidc',
     scope: 'openid profile',
     onSigninCallback: () => {
         window.history.replaceState({}, document.title, '/');
