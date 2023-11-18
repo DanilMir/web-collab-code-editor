@@ -1,7 +1,10 @@
 FROM node:18.18.2
 
-RUN npm install y-websocket
+RUN npm install -g y-websocket
 
 EXPOSE 1234
 
-CMD ["npm", "start"]
+ENV HOST=0.0.0.0
+ENV PORT=1234
+
+CMD ["npx", "y-websocket"]

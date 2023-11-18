@@ -13,4 +13,9 @@ services:
   client:
     image: client
     build: ./src/client/
+
+  y-websocket:
+    image: y-websocket
+    build: ./src/y-websocket/
+    
   
