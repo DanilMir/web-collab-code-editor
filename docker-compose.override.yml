@@ -21,7 +21,12 @@ services:
       - "7099:443"
       
   client:
-    environment:
-      - POSTGRES_PASSWORD=password
     ports:
       - "3000:3000"
+      
+  y-websocket:
+    # environment:
+    #   - CALLBACK_URL=http://localhost:8123/
+    #   - CALLBACK_OBJECTS={"monaco":"Text"}
+    ports:
+      - "1234:1234"
