@@ -3,6 +3,9 @@ version: '3.9'
 services:
   auth-db:
     image: postgres:15
+
+  project-management-db:
+    image: postgres:15
   
   auth:
     image: auth
@@ -18,4 +21,9 @@ services:
     image: y-websocket
     build: ./src/y-websocket/
     
+  project-management:
+    image: project-management
+    build: ./src/ProjectManagement
+    depends_on:
+      - project-management-db
   

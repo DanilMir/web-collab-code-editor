@@ -26,10 +26,15 @@ workspace {
                     technology "PostgreSQL"
                 }
                 
-                projectManagement = container "Project Management Service" {
+                projectsManagement = container "Projects Management Service" {
                     description "Service for creating and managing code projects."
                     tags "backend, c-sharp"
                     technology "ASP.NET Core"  
+                }
+
+                projectsDb = container "Projects Management Database" {
+                    tags "db, postgres"
+                    technology "PostgreSQL"
                 }
 
                 files = container "Files Service" {
@@ -63,16 +68,17 @@ workspace {
 
 
                 files -> s3
-                projectManagement -> files "Manage project source code"
-                projectManagement -> virtual "Send project code"
+                projectsManagement -> files "Manage project source code"
+                projectsManagement -> virtual "Send project code"
                 auth -> authDb "Save credentials"
+                projectsManagement -> projectsDb "Save projects info"
                 collab -> files "Sync code with storage"
                 auth -> files "Upload user profile picture"
                 
                 apiGateway -> files
                 apiGateway -> auth
                 apiGateway -> collab
-                apiGateway -> projectManagement    
+                apiGateway -> projectsManagement    
         }
 
         webClient -> apiGateway

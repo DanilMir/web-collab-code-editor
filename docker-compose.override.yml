@@ -4,8 +4,19 @@ services:
   auth-db:
     environment:
       - POSTGRES_PASSWORD=password
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        window: 15m
+  
+  project-management-db:
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5433:5432"
     restart: always
     deploy:
       restart_policy:
@@ -30,3 +41,10 @@ services:
     #   - CALLBACK_OBJECTS={"monaco":"Text"}
     ports:
       - "1234:1234"
+
+  project-management:
+    environment:
+      - ConnectionStrings:DefaultConnection=Host=project-management-db;Port=5432;Database=project;Username=postgres;Password=password
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5002:80"
