@@ -1,54 +1,12 @@
 using Auth;
 using Auth.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Net.Http.Headers;
-using Microsoft.OpenApi.Models;
-using OpenIddict.Validation.SystemNetHttp;
+using Microsoft.IdentityModel.Tokens;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSwaggerGen(
-    c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth API", Version = "v1" });
-        c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-        // c.AddSecurityDefinition(
-        //     "oauth",
-        //     new OpenApiSecurityScheme
-        //     {
-        //         Flows = new OpenApiOAuthFlows
-        //         {
-        //             ClientCredentials = new OpenApiOAuthFlow
-        //             {
-        //                 Scopes = new Dictionary<string, string>
-        //                 {
-        //                     ["api"] = "api scope description"
-        //                 },
-                        
-        //             },
-        //         },
-        //         In = ParameterLocation.Header,
-        //         Name = HeaderNames.Authorization,
-        //         Type = SecuritySchemeType.OAuth2
-        //     }
-        // );
-        c.AddSecurityRequirement(
-            new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                            { Type = ReferenceType.SecurityScheme, Id = "oauth" },
-                    },
-                    new[] { "api" }
-                }
-            }
-        );
-    }
-);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // Configure Entity Framework Core to use Microsoft SQL Server.
@@ -66,7 +24,6 @@ builder.Services
     .AddDefaultIdentity<AuthUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
-
 
 builder.Services.AddOpenIddict()
 
@@ -89,6 +46,7 @@ builder.Services.AddOpenIddict()
             .SetVerificationEndpointUris("connect/verify")
             .SetLogoutEndpointUris("connect/logout")
             .SetTokenEndpointUris("connect/token")
+            .SetIntrospectionEndpointUris("connect/introspect")
             .SetUserinfoEndpointUris("connect/userinfo");
 
         // Mark the "email", "profile" and "roles" scopes as supported scopes.
@@ -99,6 +57,7 @@ builder.Services.AddOpenIddict()
         options.AllowDeviceCodeFlow();
         options.AllowAuthorizationCodeFlow();
         options.AllowRefreshTokenFlow();
+
 
         // Register the signing and encryption credentials.
         options.AddDevelopmentEncryptionCertificate()
@@ -113,6 +72,13 @@ builder.Services.AddOpenIddict()
             .EnableVerificationEndpointPassthrough()
             .EnableStatusCodePagesIntegration()
             .DisableTransportSecurityRequirement();
+
+        options.DisableAccessTokenEncryption();
+
+        options.AddEncryptionKey(new SymmetricSecurityKey(
+            Convert.FromBase64String(builder.Configuration["SymmetricSecurityKey"] ?? string.Empty)));
+
+        
     })
 
     // Register the OpenIddict validation components.
@@ -129,12 +95,6 @@ builder.Services.AddOpenIddict()
 // Note: in a real world application, this step should be part of a setup script.
 builder.Services.AddHostedService<Worker>();
 
-builder.Services.AddHttpClient(typeof(OpenIddictValidationSystemNetHttpOptions).Assembly.GetName().Name)
-    .ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
-    {
-        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-    });
-
 // CORS policy to allow SwaggerUI and React clients
 builder.Services.AddCors(
     options =>
@@ -144,9 +104,8 @@ builder.Services.AddCors(
             {
                 policy
                     .WithOrigins(
-                        "http://localhost:3000",
-                        "https://localhost:3000"
-                        )
+                        builder.Configuration["ReactClient:Host"] ?? string.Empty
+                    )
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -155,14 +114,14 @@ builder.Services.AddCors(
 var app = builder.Build();
 
 // app.UseDeveloperExceptionPage();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
 
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 
