@@ -3,9 +3,11 @@ version: '3.9'
 services:
   auth-db:
     environment:
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=${AUTH_DB_USER}
+      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
+      - POSTGRES_DB=${AUTH_DB_NAME}
     ports:
-      - "5432:5432"
+      - "${AUTH_DB_EXTERNAL_PORT}:${AUTH_DB_PORT}"
     restart: always
     deploy:
       restart_policy:
@@ -14,9 +16,11 @@ services:
   
   project-management-db:
     environment:
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=${PROJECT_MANAGEMENT_DB_USER}
+      - POSTGRES_PASSWORD=${PROJECT_MANAGEMENT_DB_PASSWORD}
+      - POSTGRES_DB=${PROJECT_MANAGEMENT_DB_NAME}
     ports:
-      - "5433:5432"
+      - "${PROJECT_MANAGEMENT_DB_EXTERNAL_PORT}:${PROJECT_MANAGEMENT_DB_PORT}"
     restart: always
     deploy:
       restart_policy:
@@ -25,26 +29,32 @@ services:
 
   auth:
     environment:
-      - ConnectionStrings:DefaultConnection=Host=auth-db;Port=5432;Database=auth;Username=postgres;Password=password
+      - ConnectionStrings:DefaultConnection=Host=auth-db;Port=${AUTH_DB_PORT};Database=${AUTH_DB_NAME};Username=${AUTH_DB_USER};Password=${AUTH_DB_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=Development
+      - SymmetricSecurityKey=${SYMMETRIC_SECURITY_KEY}
+      - Clients:ReactClient:ClientId=${CLIENT_ID}
+      - Clients:ReactClient:Host=${DOCKER_EXTERNAL_URL}:${CLIENT_EXTERNAL_PORT}
+      - Clients:Postman:ClientId=${POSTMAN_CLIENT_ID}
+      - Clients:Postman:Host=${POSTMAN_URI}
+      - Clients:ProjectManagement:ClientId=${PROJECT_MANAGEMENT_CLIENT_ID}
+      - Clients:ProjectManagement:ClientSecret=${PROJECT_MANAGEMENT_SECRET}
     ports:
-      - "5001:80"
-      - "7099:443"
+      - "${AUTH_EXTERNAL_PORT}:${AUTH_PORT}"
       
   client:
     ports:
-      - "3000:3000"
+      - "${CLIENT_EXTERNAL_PORT}:${CLIENT_PORT}"
       
   y-websocket:
     # environment:
     #   - CALLBACK_URL=http://localhost:8123/
     #   - CALLBACK_OBJECTS={"monaco":"Text"}
     ports:
-      - "1234:1234"
+      - "${Y_WEBSOCKET_EXTERNAL_PORT}:${Y_WEBSOCKET_PORT}"
 
   project-management:
     environment:
-      - ConnectionStrings:DefaultConnection=Host=project-management-db;Port=5432;Database=project;Username=postgres;Password=password
+      - ConnectionStrings:DefaultConnection=Host=project-management-db;Port=${PROJECT_MANAGEMENT_DB_PORT};Database=${PROJECT_MANAGEMENT_DB_NAME};Username=${PROJECT_MANAGEMENT_DB_USER};Password=${PROJECT_MANAGEMENT_DB_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "5002:80"
+      - "${PROJECT_MANAGEMENT_EXTERNAL_PORT}:${PROJECT_MANAGEMENT_PORT}"

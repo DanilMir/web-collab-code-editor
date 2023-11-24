@@ -77,8 +77,6 @@ builder.Services.AddOpenIddict()
 
         options.AddEncryptionKey(new SymmetricSecurityKey(
             Convert.FromBase64String(builder.Configuration["SymmetricSecurityKey"] ?? string.Empty)));
-
-        
     })
 
     // Register the OpenIddict validation components.
@@ -104,7 +102,7 @@ builder.Services.AddCors(
             {
                 policy
                     .WithOrigins(
-                        builder.Configuration["ReactClient:Host"] ?? string.Empty
+                         builder.Configuration["Clients:ReactClient:Host"] ?? string.Empty
                     )
                     .AllowAnyHeader()
                     .AllowAnyMethod();
