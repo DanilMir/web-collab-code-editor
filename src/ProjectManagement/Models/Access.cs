@@ -7,3 +7,14 @@ public class Access
     public Guid UserId { get; set; }
     public AccessType Type { get; set; }
 }
+
+public class AccessCreateRequest
+{
+    public Guid ProjectId { get; set; }
+    public AccessType Type { get; set; }
+}
+
+public class AccessUpdateRequest
+{
+    public AccessType Type { get; set; }
+}
