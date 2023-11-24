@@ -36,11 +36,11 @@ public class Worker : IHostedService
                 DisplayName = "React client",
                 RedirectUris =
                 {
-                    new Uri($"{uri}signin-oidc")
+                    new Uri($"{uri}/signin-oidc")
                 },
                 PostLogoutRedirectUris =
                 {
-                    new Uri($"{uri}signout-callback-oidc")
+                    new Uri($"{uri}/signout-callback-oidc")
                 },
                 Permissions =
                 {
@@ -70,7 +70,7 @@ public class Worker : IHostedService
                 DisplayName = "postman",
                 RedirectUris =
                 {
-                    new Uri($"{uri}v1/callback")
+                    new Uri($"{uri}/v1/callback")
                 },
                 Permissions =
                 {
