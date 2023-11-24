@@ -11,3 +11,19 @@ public class Project
     public required string ProgrammingLanguage { get; set; }
     public DateTime CreatedAt { get; set; }
 }
+
+public class ProjectCreationRequest
+{
+    public required string Title { get; set; }
+    public string? Description { get; set; }
+    public Visibility Visibility { get; set; }
+    public required string ProgrammingLanguage { get; set; }
+}
+
+public class ProjectUpdateRequest
+{
+    public required string Title { get; set; }
+    public string? Description { get; set; }
+    public Visibility Visibility { get; set; }
+    public required string ProgrammingLanguage { get; set; }
+}
