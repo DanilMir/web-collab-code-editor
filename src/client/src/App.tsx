@@ -3,7 +3,7 @@ import NavBar from "./components/NavBar";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Project from "./pages/Project";
 import NotFound from './pages/errors/NotFound';
-import ProjectsListPage from './pages/ProjectsListPage';
+import {ProjectsListPage} from './pages/ProjectsListPage';
 
 function App() {
 

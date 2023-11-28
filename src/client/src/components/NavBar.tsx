@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import {Link} from 'react-router-dom';
 import {useAuth} from "react-oidc-context";
 
-const pages = ['Projects'];
+const pages = ['projects'];
 const settings = ['Profile', 'Account', 'Dashboard'];
 
 export default function NavBar() {
@@ -170,7 +170,7 @@ export default function NavBar() {
                             </Menu>
                         </Box>
                         :
-                        <Button color="inherit" onClick={() => auth.signinRedirect()}>Login</Button>
+                        <Button color="inherit" onClick={() => void auth.signinRedirect()}>Login</Button>
                     }
                 </Toolbar>
             </Container>

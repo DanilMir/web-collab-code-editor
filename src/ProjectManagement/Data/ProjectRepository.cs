@@ -31,6 +31,16 @@ public class ProjectRepository : IProjectRepository
         return projects;
     }
 
+    public int GetProjectsCount(Guid userId)
+    {
+        var accesses = _dbContext.Accesses
+            .Where(item => 
+                item.UserId == userId && (item.Type == AccessType.Owner || item.Type == AccessType.Collaborator))
+            .Select(item => item.ProjectId);
+        var projectsCount = _dbContext.Projects.Count(item => accesses.Contains(item.Id));
+        return projectsCount;
+    }
+
 
     public Project? GetProjectById(Guid projectId) => _dbContext.Projects.Find(projectId);
 

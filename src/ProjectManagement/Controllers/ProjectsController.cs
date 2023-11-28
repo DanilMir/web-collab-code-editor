@@ -21,19 +21,17 @@ public class ProjectsController : ControllerBase
 
     
     [HttpGet]
-    public IActionResult GetProjectsByUserId(Guid userId, bool pending = false, int offset = 0, int limit = 1)
+    public IActionResult GetProjectsByUserId(bool pending = false, int offset = 0, int limit = 1)
     {
-        var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        if (userId != currentUserId)
-        {
-            return Forbid();
-        }
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        var result = pending
+        var result = !pending
             ? _unitOfWork.ProjectRepository.GetActiveProjectsByUserId(userId, offset, limit)
             : _unitOfWork.ProjectRepository.GetPendingProjectsByUserId(userId, offset, limit);
 
-        return Ok(new { Result = result });
+        var count = _unitOfWork.ProjectRepository.GetProjectsCount(userId);
+        
+        return Ok(new {Projects = result, AllProjectsCount = count});
     }
 
     
@@ -54,20 +52,23 @@ public class ProjectsController : ControllerBase
             return Forbid();
         }
 
-        return Ok(new { Result = project });
+        return Ok(project);
     }
 
 
     [HttpPost]
-    public IActionResult CreateProject(ProjectCreationRequest projectRequest)
+    [Consumes("application/json")]
+    public IActionResult CreateProject([FromBody]ProjectCreationRequest projectRequest)
     {
+        var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        
         var project = new Project()
         {
             Title = projectRequest.Title,
             Description = projectRequest.Description,
             Visibility = projectRequest.Visibility,
             ProgrammingLanguage = projectRequest.ProgrammingLanguage,
-            Accesses = new List<Access>(),
+            Accesses = new List<Access> {new() {UserId = currentUserId, Type = AccessType.Owner}},
             BucketName = String.Empty, //TODO: get from file service
             CreatedAt = DateTime.Now
         };
@@ -75,13 +76,7 @@ public class ProjectsController : ControllerBase
         _unitOfWork.ProjectRepository.InsertProject(project);
         _unitOfWork.ProjectRepository.Save();
 
-        var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var access = new Access() { ProjectId = project.Id, UserId = currentUserId, Type = AccessType.Owner };
-
-        _unitOfWork.AccessRepository.InsertAccess(access);
-        _unitOfWork.AccessRepository.Save();
-
-        return Ok(new { Result = project }); //TODO: mb access not updated
+        return Ok(project); //TODO: mb access not updated
     }
     
     [HttpPut]
@@ -111,7 +106,7 @@ public class ProjectsController : ControllerBase
         _unitOfWork.ProjectRepository.UpdateProject(project);
         _unitOfWork.ProjectRepository.Save();
 
-        return Ok(new { Result = project });
+        return Ok(project);
     }
     
     [HttpDelete]
