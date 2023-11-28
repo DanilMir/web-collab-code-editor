@@ -53,6 +53,21 @@ builder.Services.AddOpenIddict()
         });
     });
 
+builder.Services.AddCors(
+    options =>
+    {
+        options.AddPolicy(
+            "default", policy =>
+            {
+                policy
+                    .WithOrigins(
+                        "http://localhost:3000"
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+    });
+
 
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddTransient<IAccessRepository, AccessRepository>();
@@ -74,7 +89,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // app.UseHttpsRedirection();
-
+app.UseCors("default");
 app.UseAuthentication();
 app.UseAuthorization();
 
