@@ -15,7 +15,6 @@ import AdbIcon from '@mui/icons-material/Adb';
 import {Link} from 'react-router-dom';
 import {useAuth} from "react-oidc-context";
 
-const pages = ['projects'];
 const settings = ['Profile', 'Account', 'Dashboard'];
 
 export default function NavBar() {
@@ -93,11 +92,11 @@ export default function NavBar() {
                                 display: {xs: 'block', md: 'none'},
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
-                                </MenuItem>
-                            ))}
+
+                            <MenuItem onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center" component={Link} to="/projects">Projects</Typography>
+                            </MenuItem>
+
                         </Menu>
                     </Box>
                     <AdbIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1}}/>
@@ -121,15 +120,14 @@ export default function NavBar() {
                         LOGO
                     </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        {pages.map((page) => (
+                        <Link to="/projects">
                             <Button
-                                key={page}
                                 onClick={handleCloseNavMenu}
                                 sx={{my: 2, color: 'white', display: 'block'}}
                             >
-                                {page}
+                                Projects
                             </Button>
-                        ))}
+                        </Link>
                     </Box>
 
                     {auth.isAuthenticated ?
