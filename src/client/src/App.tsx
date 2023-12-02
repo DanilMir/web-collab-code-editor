@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Project from "./pages/Project";
 import NotFound from './pages/errors/NotFound';
 import {ProjectsListPage} from './pages/ProjectsListPage';
+import CreateProjectPage from "./pages/CreateProjectPage";
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
                 <Routes>
                     <Route path="/projects/:id" element={<Project />} />
                     <Route path="/projects/" element={<ProjectsListPage />} />
+                    <Route path="/projects/create" element={<CreateProjectPage />} />
 
 
                     <Route path='*' element={<NotFound />} />

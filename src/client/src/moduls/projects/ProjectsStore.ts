@@ -44,8 +44,6 @@ export default class ProjectsStore {
     }
 
     createProject(project: ProjectCreateModel, token: string) {
-        this.setLoading(true);
-
         this.projectService
             .createProjects(project, token)
             .then(result => {
@@ -55,7 +53,6 @@ export default class ProjectsStore {
                 console.log(error);
             })
             .finally(() => {
-                this.setLoading(false);
             })
     }
 }

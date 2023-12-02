@@ -12,9 +12,11 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {useAuth} from "react-oidc-context";
-
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DataObjectIcon from '@mui/icons-material/DataObject';
 const settings = ['Profile', 'Account', 'Dashboard'];
 
 export default function NavBar() {
@@ -22,6 +24,9 @@ export default function NavBar() {
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     const auth = useAuth();
+
+    const location = useLocation();
+    const projectRegex = new RegExp('^\/projects\/[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}/?$');
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -40,9 +45,9 @@ export default function NavBar() {
 
     return (
         <AppBar position="static">
-            <Container maxWidth="xl">
+            <Container maxWidth={false}>
                 <Toolbar disableGutters>
-                    <AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
+                    <DataObjectIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
                     <Typography
                         variant="h6"
                         noWrap
@@ -53,13 +58,13 @@ export default function NavBar() {
                             display: {xs: 'none', md: 'flex'},
                             fontFamily: 'monospace',
                             fontWeight: 700,
-                            letterSpacing: '.3rem',
+                            // letterSpacing: '.3rem',
                             color: 'inherit',
                             textDecoration: 'none',
                         }}
                     >
 
-                        LOGO
+                        CollabCodeEditor
 
                     </Typography>
 
@@ -99,7 +104,7 @@ export default function NavBar() {
 
                         </Menu>
                     </Box>
-                    <AdbIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1}}/>
+                    <DataObjectIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1}}/>
 
                     <Typography
                         variant="h5"
@@ -117,7 +122,7 @@ export default function NavBar() {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        CollabCodeEditor
                     </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         <Link to="/projects">
@@ -128,13 +133,41 @@ export default function NavBar() {
                                 Projects
                             </Button>
                         </Link>
+                        <Link to="/projects/create">
+                            <IconButton
+                                onClick={handleCloseNavMenu}
+                                sx={{
+                                    mt: 2
+                                }}
+                            >
+                                <AddCircleOutlineIcon sx={{ color: "white" }}/>
+                            </IconButton>
+                        </Link>
                     </Box>
+
+                    {projectRegex.test(location.pathname) ?
+                        <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+
+                                <Button
+                                    onClick={handleCloseNavMenu}
+                                    variant="contained"
+                                    color="success"
+                                    sx={{my: 2, color: 'white', }}
+                                    startIcon={<PlayArrowIcon/>}
+                                >
+                                    Run
+                                </Button>
+
+                        </Box> :
+                        null
+                    }
+
 
                     {auth.isAuthenticated ?
                         <Box sx={{flexGrow: 0}}>
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"/>
+                                    <Avatar/>
                                 </IconButton>
                             </Tooltip>
                             <Menu
