@@ -20,6 +20,7 @@ import {useAuth} from "react-oidc-context";
 import Button from "@mui/material/Button";
 import {Link, Navigate} from 'react-router-dom';
 import {useEffect} from "react";
+import ReplayIcon from '@mui/icons-material/Replay';
 
 
 interface TablePaginationActionsProps {
@@ -133,19 +134,14 @@ export const CustomPaginationActionsTable = observer(() => {
 
         return (
             <>
-                <Button variant="contained" onClick={() => {
+                <Button
+                    variant="contained"
+                    startIcon={<ReplayIcon/>}
+                        onClick={() => {
                     projectStore.getActiveProjects(page, rowsPerPage, auth.user?.access_token!)
                 }}>Update projects list</Button>
 
-                <Button variant="outlined" onClick={() => {
-                    projectStore.createProject({
-                        title: "1",
-                        description: "ds",
-                        visibility: 0,
-                        programmingLanguage: "js"
-                    }, auth.user?.access_token!)
-                }}>Post
-                </Button>
+                <Button variant="outlined" component={Link} to="/projects/create">Create project</Button>
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 500}} aria-label="custom pagination table">
                         <TableBody>

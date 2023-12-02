@@ -43,6 +43,7 @@ export default function CollaborativeEditor(props: Props) {
                 defaultValue=""
                 options={{ readOnly: props.readOnly }} //TODO: readOnly: false, if only read access granted
                 onMount={handleEditorDidMount}
+                theme="vs-dark"
             />
         </>
     )
