@@ -1,4 +1,4 @@
-# web-collab-code-editor
+# Сollab Сode Editor
 
 ## API
 
