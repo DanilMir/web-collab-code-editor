@@ -30,6 +30,13 @@ public class AwsS3Service
 
     public async Task PutObjectAsync(PutObjectRequest request) => await _client.PutObjectAsync(request);
 
-    public async Task<GetObjectResponse> GetObjectAsync(string bucketName, string key) =>
-        await _client.GetObjectAsync(bucketName, key);
+    public async Task<GetObjectResponse> GetObjectAsync(GetObjectRequest request) =>
+        await _client.GetObjectAsync(request);
+
+    public Task<ListObjectsV2Response> ListObjectsV2Async(ListObjectsV2Request request,
+        CancellationToken cancellationToken = default) => _client.ListObjectsV2Async(request, cancellationToken);
+
+
+    public Task<DeleteObjectResponse> DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancellationToken = default) =>
+        _client.DeleteObjectAsync(request, cancellationToken);
 }
