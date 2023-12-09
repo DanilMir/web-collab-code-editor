@@ -11,6 +11,16 @@ public class ProjectRepository : IProjectRepository
         _dbContext = dbContext;
     }
     
+    public IEnumerable<Project> GetProjectsByUserId(Guid userId, int offset = 0, int limit = 1)
+    {
+        var accesses = _dbContext.Accesses
+            .Where(item => 
+                item.UserId == userId && (item.Type == AccessType.Owner || item.Type == AccessType.Collaborator))
+            .Skip(offset * limit).Take(limit).Select(item => item.ProjectId);
+        var projects = _dbContext.Projects.Where(item => accesses.Contains(item.Id)).ToList();
+        return projects;
+    }
+    
     public IEnumerable<Project> GetActiveProjectsByUserId(Guid userId, int offset = 0, int limit = 1)
     {
         var accesses = _dbContext.Accesses

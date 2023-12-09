@@ -29,7 +29,7 @@ public class AccessController : ControllerBase
             return Forbid();
         }
 
-        return Ok(new { Result = accesses });
+        return Ok(accesses);
     }
 
     [HttpGet]
@@ -50,7 +50,7 @@ public class AccessController : ControllerBase
             return NotFound();
         }
 
-        return Ok(new { Result = access });
+        return Ok(access);
     }
 
     [HttpPost]
@@ -73,7 +73,7 @@ public class AccessController : ControllerBase
 
         _unitOfWork.AccessRepository.InsertAccess(access);
 
-        return Ok(new { Result = access });
+        return Ok(access);
     }
 
     [HttpPut]
@@ -93,14 +93,14 @@ public class AccessController : ControllerBase
         {
             return NotFound();
         }
-        
+
         access.Type = updateRequest.Type;
-            
+
         _unitOfWork.AccessRepository.UpdateAccess(access);
 
-        return Ok(new { Result = access });
+        return Ok(access);
     }
-    
+
     [HttpDelete]
     [Route("{accessId:guid}")]
     public IActionResult DeleteAccess(Guid projectId, Guid accessId)
@@ -118,9 +118,9 @@ public class AccessController : ControllerBase
         {
             return NotFound();
         }
-            
+
         _unitOfWork.AccessRepository.DeleteAccess(access);
 
-        return Ok(new { Result = $"Access {accessId} deleted" });
+        return Ok($"Access {accessId} deleted");
     }
 }
