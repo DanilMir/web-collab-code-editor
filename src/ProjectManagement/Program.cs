@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 using ProjectManagement.Data;
+using ProjectManagement.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +73,11 @@ builder.Services.AddCors(
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddTransient<IAccessRepository, AccessRepository>();
 builder.Services.AddTransient<UnitOfWork>();
+
+
+builder.Services.AddAutoMapper(typeof(AppMappingProfile));
+
+
 
 var app = builder.Build();
 

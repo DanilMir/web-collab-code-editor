@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Data;
@@ -12,11 +13,13 @@ namespace ProjectManagement.Controllers;
 public class ProjectsController : ControllerBase
 {
     private readonly UnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
 
-    public ProjectsController(UnitOfWork unitOfWork)
+    public ProjectsController(UnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     
@@ -25,13 +28,15 @@ public class ProjectsController : ControllerBase
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        var result = !pending
+        var projects = !pending
             ? _unitOfWork.ProjectRepository.GetActiveProjectsByUserId(userId, offset, limit)
             : _unitOfWork.ProjectRepository.GetPendingProjectsByUserId(userId, offset, limit);
 
         var count = _unitOfWork.ProjectRepository.GetProjectsCount(userId);
+
+        var projectsDto = _mapper.Map<List<ProjectDto>>(projects);
         
-        return Ok(new {Projects = result, AllProjectsCount = count});
+        return Ok(new {Projects = projectsDto, AllProjectsCount = count});
     }
 
     
@@ -42,7 +47,7 @@ public class ProjectsController : ControllerBase
         var project = _unitOfWork.ProjectRepository.GetProjectById(id);
         if (project is null)
         {
-            return NotFound(new { Error = "Project not exists" });
+            return NotFound("Project not exists");
         }
 
         var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -51,14 +56,16 @@ public class ProjectsController : ControllerBase
         {
             return Forbid();
         }
-
-        return Ok(project);
+        
+        var projectDto = _mapper.Map<ProjectDto>(project);
+        
+        return Ok(projectDto);
     }
 
 
     [HttpPost]
     [Consumes("application/json")]
-    public IActionResult CreateProject([FromBody]ProjectCreationRequest projectRequest)
+    public IActionResult CreateProject([FromBody]ProjectDto projectRequest)
     {
         var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         
@@ -69,19 +76,20 @@ public class ProjectsController : ControllerBase
             Visibility = projectRequest.Visibility,
             ProgrammingLanguage = projectRequest.ProgrammingLanguage,
             Accesses = new List<Access> {new() {UserId = currentUserId, Type = AccessType.Owner}},
-            BucketName = String.Empty, //TODO: get from file service
             CreatedAt = DateTime.Now
         };
 
         _unitOfWork.ProjectRepository.InsertProject(project);
         _unitOfWork.ProjectRepository.Save();
 
-        return Ok(project); //TODO: mb access not updated
+        var projectDto = _mapper.Map<ProjectDto>(project);
+        
+        return Ok(projectDto);
     }
     
     [HttpPut]
     [Route("{id:guid}")]
-    public IActionResult UpdateProject(Guid id, ProjectUpdateRequest projectRequest)
+    public IActionResult UpdateProject(Guid id, ProjectDto projectRequest)
     {
         var project = _unitOfWork.ProjectRepository.GetProjectById(id);
 
@@ -106,7 +114,9 @@ public class ProjectsController : ControllerBase
         _unitOfWork.ProjectRepository.UpdateProject(project);
         _unitOfWork.ProjectRepository.Save();
 
-        return Ok(project);
+        var projectDto = _mapper.Map<ProjectDto>(project);
+        
+        return Ok(projectDto);
     }
     
     [HttpDelete]
@@ -130,6 +140,6 @@ public class ProjectsController : ControllerBase
         _unitOfWork.ProjectRepository.DeleteProject(project);
         _unitOfWork.ProjectRepository.Save();
 
-        return Ok(new { Result = $"Project {id} deleted" });
+        return Ok($"Project {id} deleted");
     }
 }
