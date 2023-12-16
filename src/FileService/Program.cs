@@ -1,4 +1,5 @@
-using Amazon.S3;
+using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Validation.AspNetCore;
 using FileService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,46 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<AwsS3Service>();
 builder.Services.AddSingleton<BucketsService>();
+builder.Services.AddHttpClient<ProjectsService>(httpClient =>
+{
+    httpClient.BaseAddress = new Uri(builder.Configuration["Clients:ProjectManagement:Url"] ?? String.Empty);
+});
+
+
+builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+builder.Services.AddAuthorization();
+
+builder.Services.AddOpenIddict()
+    .AddValidation(options =>
+    {
+        // Note: the validation handler uses OpenID Connect discovery
+        // to retrieve the address of the introspection endpoint.
+        options.SetIssuer("http://auth");
+        options.AddAudiences(builder.Configuration["Clients:Files:ClientId"] ?? string.Empty);
+
+        // Configure the validation handler to use introspection and register the client
+        // credentials used when communicating with the remote introspection endpoint.
+        options.AddEncryptionKey(new SymmetricSecurityKey(
+            Convert.FromBase64String(builder.Configuration["SymmetricSecurityKey"] ?? string.Empty)));
+
+
+        // Register the System.Net.Http integration.
+        options.UseSystemNetHttp();
+
+        // Register the ASP.NET Core host.
+        options.UseAspNetCore();
+        
+        options.Configure(opts =>
+        {
+            opts.TokenValidationParameters.ValidIssuers = new List<string>
+            {
+                "http://auth:80/",
+                "http://localhost:5001/",
+            };
+        });
+    });
+
+
 
 var app = builder.Build();
 
