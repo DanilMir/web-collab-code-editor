@@ -109,9 +109,6 @@ export const CustomPaginationActionsTable = observer(() => {
             projectStore.getActiveProjects(page, rowsPerPage, auth.user?.access_token!);
         }, []);
 
-        const emptyRows =
-            page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projectStore.projectArray.length) : 0;
-
         const handleChangePage = (
             event: React.MouseEvent<HTMLButtonElement> | null,
             newPage: number,

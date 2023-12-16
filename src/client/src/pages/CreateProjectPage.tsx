@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography";
 import CodeIcon from '@mui/icons-material/Code';
 import {useRootStore} from "../hooks/useRootStore";
 import {useAuth} from "react-oidc-context";
-import axios from "axios";
 import {ProjectCreateModel} from "../moduls/projects/ProjectModel";
 
 export default function CreateProjectPage() {
