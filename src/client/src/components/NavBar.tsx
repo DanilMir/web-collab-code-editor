@@ -11,7 +11,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import {Link, useLocation} from 'react-router-dom';
 import {useAuth} from "react-oidc-context";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';

@@ -1,5 +1,5 @@
 import ProjectsService from "./ProjectsService";
-import {action, makeAutoObservable, toJS} from "mobx"
+import {action, makeAutoObservable} from "mobx"
 import ProjectModel, {GetProjectResponseModel, ProjectCreateModel} from "./ProjectModel";
 
 export default class ProjectsStore {
