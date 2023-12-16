@@ -55,7 +55,8 @@ public class Worker : IHostedService
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
-                    Permissions.Prefixes.Scope + "api1",
+                    Permissions.Prefixes.Scope + "project_management",
+                    Permissions.Prefixes.Scope + "files"
                 }
             });
         }
@@ -85,7 +86,8 @@ public class Worker : IHostedService
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
-                    Permissions.Prefixes.Scope + "api1",
+                    Permissions.Prefixes.Scope + "project_management",
+                    Permissions.Prefixes.Scope + "files",
                 }
             });
         }
@@ -106,13 +108,41 @@ public class Worker : IHostedService
             });
         }
         
+        clientId = _configuration["Clients:Files:ClientId"] ?? string.Empty;
+        clientSecret = _configuration["Clients:Files:ClientSecret"] ?? string.Empty;
+        
+        if (await manager.FindByClientIdAsync(clientId) is null)
+        {
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = clientId,
+                ClientSecret = clientSecret,
+                Permissions =
+                {
+                    Permissions.Endpoints.Introspection
+                },
+            });
+        }
+        
         var scopeManager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
         
-        if (await scopeManager.FindByNameAsync("api1") is null)
+        if (await scopeManager.FindByNameAsync("project_management") is null)
         {
             await scopeManager.CreateAsync(new OpenIddictScopeDescriptor
             {
-                Name = "api1",
+                Name = "project_management",
+                Resources =
+                {
+                    clientId
+                }
+            });
+        }
+        
+        if (await scopeManager.FindByNameAsync("files") is null)
+        {
+            await scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "files",
                 Resources =
                 {
                     clientId
