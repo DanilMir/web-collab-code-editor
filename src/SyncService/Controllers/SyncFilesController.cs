@@ -16,14 +16,13 @@ public class SyncFilesController : Controller
 
     [HttpPost]
     [Route("sync/callback")]
-    public IActionResult Callback([FromBody] CallbackRequestModel callbackRequestModel)
+    public async Task<IActionResult> Callback([FromBody] CallbackRequestModel callbackRequestModel)
     {
         var (projectId, prefix, fileName) = ParseRoom(callbackRequestModel.Room);
-        _filesService.UploadFile(projectId, prefix, fileName, callbackRequestModel.Data.Monaco.Content);
+        await _filesService.UploadFile(projectId, prefix, fileName, callbackRequestModel.Data.Monaco.Content);
         return Ok();
     }
-
-
+    
     private static (string, string, string) ParseRoom(string room)
     {
         var (projectId, prefix, fileName) = room.Split(':') switch { var a => (a[0], a[1], a[2]) };

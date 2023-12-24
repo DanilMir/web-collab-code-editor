@@ -9,12 +9,12 @@ export default class ProjectModel {
     ){}
 }
 
-enum Visibility {
+export enum Visibility {
     Public,
     Private
 }
 
-export class ProjectCreateModel {
+export class ProjectEditorModel {
     constructor(
         public title: string,
         public description: string,

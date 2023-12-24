@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Models;
 
-namespace ProjectManagement.Data;
+namespace ProjectManagement.Data.DbContexts;
 
 public sealed class ApplicationDbContext : DbContext
 {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Data;
 using ProjectManagement.Models;
+using ProjectManagement.Services;
 
 namespace ProjectManagement.Controllers;
 
@@ -14,12 +15,14 @@ public class ProjectsController : ControllerBase
 {
     private readonly UnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly FilesService _filesService;
 
 
-    public ProjectsController(UnitOfWork unitOfWork, IMapper mapper)
+    public ProjectsController(UnitOfWork unitOfWork, IMapper mapper, FilesService filesService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _filesService = filesService;
     }
 
     
@@ -33,10 +36,8 @@ public class ProjectsController : ControllerBase
             : _unitOfWork.ProjectRepository.GetPendingProjectsByUserId(userId, offset, limit);
 
         var count = _unitOfWork.ProjectRepository.GetProjectsCount(userId);
-
-        var projectsDto = _mapper.Map<List<ProjectDto>>(projects);
         
-        return Ok(new {Projects = projectsDto, AllProjectsCount = count});
+        return Ok(new {Projects = projects, AllProjectsCount = count});
     }
 
     
@@ -65,7 +66,7 @@ public class ProjectsController : ControllerBase
 
     [HttpPost]
     [Consumes("application/json")]
-    public IActionResult CreateProject([FromBody]ProjectDto projectRequest)
+    public async Task<IActionResult> CreateProject([FromBody]ProjectDto projectRequest)
     {
         var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         
@@ -83,6 +84,10 @@ public class ProjectsController : ControllerBase
         _unitOfWork.ProjectRepository.Save();
 
         var projectDto = _mapper.Map<ProjectDto>(project);
+        
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
+        //todo: refactor
+        await _filesService.CreatePythonTemplateProject(project.Id.ToString(), accessToken);
         
         return Ok(projectDto);
     }
@@ -121,7 +126,7 @@ public class ProjectsController : ControllerBase
     
     [HttpDelete]
     [Route("{id:guid}")]
-    public IActionResult DeleteProject(Guid id)
+    public async Task<IActionResult> DeleteProject(Guid id)
     {
         var project = _unitOfWork.ProjectRepository.GetProjectById(id);
 
@@ -139,6 +144,10 @@ public class ProjectsController : ControllerBase
 
         _unitOfWork.ProjectRepository.DeleteProject(project);
         _unitOfWork.ProjectRepository.Save();
+
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
+        
+        await _filesService.DeleteFolder(project.Id.ToString(), accessToken);
 
         return Ok($"Project {id} deleted");
     }

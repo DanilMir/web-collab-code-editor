@@ -9,7 +9,7 @@ public class FilesService
         _client = client;
     }
 
-    public void UploadFile(string projectId, string? prefix, string fileName, byte[] fileContent)
+    public async Task UploadFile(string projectId, string? prefix, string fileName, byte[] fileContent)
     {
         var stream = new MemoryStream(fileContent);
         
@@ -20,6 +20,6 @@ public class FilesService
             Prefix = prefix ?? string.Empty
         };
         var content = JsonContent.Create(request);
-        _client.PostAsync($"/projects/{projectId}/files", content);
+        await _client.PostAsync($"/projects/{projectId}/files", content);
     }
 }

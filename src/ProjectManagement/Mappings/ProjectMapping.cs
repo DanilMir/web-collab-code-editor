@@ -1,11 +1,11 @@
 using AutoMapper;
 using ProjectManagement.Models;
 
-namespace ProjectManagement.Mapper;
+namespace ProjectManagement.Mappings;
 
-public class AppMappingProfile : Profile
+public class ProjectMapping : Profile
 {
-    public AppMappingProfile()
+    public ProjectMapping()
     {			
         CreateMap<Project, ProjectDto>().ReverseMap();
     }

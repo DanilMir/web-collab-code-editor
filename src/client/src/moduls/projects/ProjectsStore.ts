@@ -1,6 +1,6 @@
 import ProjectsService from "./ProjectsService";
 import {action, makeAutoObservable} from "mobx"
-import ProjectModel, {GetProjectResponseModel, ProjectCreateModel} from "./ProjectModel";
+import ProjectModel, {GetProjectResponseModel, ProjectEditorModel} from "./ProjectModel";
 
 export default class ProjectsStore {
     projectService;
@@ -8,6 +8,10 @@ export default class ProjectsStore {
 
     projectArray: ProjectModel[] = [];
     allProjectsCount: number = 0
+
+    project: ProjectEditorModel = new ProjectEditorModel("", "", 0, "")
+
+
 
     constructor() {
         this.projectService = new ProjectsService();
@@ -27,10 +31,41 @@ export default class ProjectsStore {
         this.isLoading = isLoading
     }
 
-    getActiveProjects(offset: number, limit: number, token: string) {
+    setProject(project: ProjectEditorModel) {
+        this.project = project
+    }
+
+    getProject(id: string, token: string) {
         this.setLoading(true);
         this.projectService
-            .getActiveProjects(offset, limit, token)
+            .getProject(id, token)
+            .then(result => {
+                this.setProject(result.data)
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                this.setLoading(false);
+            })
+    }
+
+    createProject(project: ProjectEditorModel, token: string) {
+        this.projectService
+            .createProject(project, token)
+            .then(result => {
+                console.log(result)
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+            })
+    }
+
+    getActiveProjects(offset: number, limit: number, token: string) {
+        this.setLoading(true);
+        this.projectService.getActiveProjects(offset, limit, token)
             .then(result => {
                 this.updateProjects(result.data)
                 console.log(result)
@@ -43,9 +78,22 @@ export default class ProjectsStore {
             })
     }
 
-    createProject(project: ProjectCreateModel, token: string) {
+    editProject(project: ProjectEditorModel, token: string) {
         this.projectService
-            .createProjects(project, token)
+            .editProject(project, token)
+            .then(result => {
+                console.log(result)
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+            })
+    }
+
+    deleteProject(project: ProjectEditorModel, token: string) {
+        this.projectService
+            .createProject(project, token)
             .then(result => {
                 console.log(result)
             })

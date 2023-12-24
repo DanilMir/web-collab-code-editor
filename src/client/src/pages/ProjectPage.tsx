@@ -5,7 +5,7 @@ type Params = {
     id: string
 };
 
-export default function Project() {
+export default function ProjectPage() {
     const {id} = useParams<Params>();
 
     function accessibleProject(id: string) {
@@ -21,8 +21,6 @@ export default function Project() {
 
     return (
         <>
-            <h1>Project № {id}</h1>
-
             <CollaborativeEditor
                 height="100vh"
                 width="100wh"
