@@ -3,6 +3,7 @@ import {CustomPaginationActionsTable} from "../components/PaginationProjectsTabl
 import Box from '@mui/material/Box';
 import {observer} from "mobx-react";
 import {Navigate} from "react-router-dom";
+import LoginWarning from "../components/LoginWarning";
 
 export const ProjectsListPage = observer(() => {
         const auth = useAuth();
@@ -12,7 +13,7 @@ export const ProjectsListPage = observer(() => {
         }
 
         if (!auth.isAuthenticated) {
-            return <Navigate to="/login" />;
+            return <LoginWarning/>;
         }
 
         return (

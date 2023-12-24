@@ -1,6 +1,6 @@
 using ProjectManagement.Models;
 
-namespace ProjectManagement.Data;
+namespace ProjectManagement.Data.Repositories;
 
 public interface IAccessRepository
 {

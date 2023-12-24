@@ -42,7 +42,7 @@ builder.Services.AddOpenIddict()
 
         // Register the ASP.NET Core host.
         options.UseAspNetCore();
-        
+
         options.Configure(opts =>
         {
             opts.TokenValidationParameters.ValidIssuers = new List<string>
@@ -52,7 +52,6 @@ builder.Services.AddOpenIddict()
             };
         });
     });
-
 
 
 var app = builder.Build();

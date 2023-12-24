@@ -1,5 +1,5 @@
 import ProjectsRepository from "./ProjectsRepository";
-import ProjectModel, {ProjectCreateModel} from "./ProjectModel";
+import ProjectModel, {ProjectEditorModel} from "./ProjectModel";
 
 export default class ProjectsService {
     projectsRepository;
@@ -12,8 +12,23 @@ export default class ProjectsService {
         return await this.projectsRepository.getActiveProjects(offset, limit, token);
     }
 
-    async createProjects (project: ProjectCreateModel, token: string)
+    async getProject (id: string, token: string)
     {
-        return await this.projectsRepository.createProjects(project, token);
+        return await this.projectsRepository.getProject(id, token);
+    }
+
+    async createProject (project: ProjectEditorModel, token: string)
+    {
+        return await this.projectsRepository.createProject(project, token);
+    }
+
+    async editProject (project: ProjectEditorModel, token: string)
+    {
+        return await this.projectsRepository.updateProject(project, token);
+    }
+
+    async deleteProject (id: string, token: string)
+    {
+        return await this.projectsRepository.deleteProject(id, token);
     }
 }

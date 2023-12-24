@@ -2,7 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 using ProjectManagement.Data;
-using ProjectManagement.Mapper;
+using ProjectManagement.Data.DbContexts;
+using ProjectManagement.Data.Repositories;
+using ProjectManagement.Mappings;
+using ProjectManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +23,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         optionsBuilder => { optionsBuilder.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), null); }
     );
 });
+
+builder.Services.AddHttpClient<FilesService>(client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["Clients:Files:Url"] ?? string.Empty);
+    }
+);
+
 
 builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
 builder.Services.AddAuthorization();
@@ -43,7 +53,7 @@ builder.Services.AddOpenIddict()
 
         // Register the ASP.NET Core host.
         options.UseAspNetCore();
-        
+
         options.Configure(opts =>
         {
             opts.TokenValidationParameters.ValidIssuers = new List<string>
@@ -75,8 +85,7 @@ builder.Services.AddTransient<IAccessRepository, AccessRepository>();
 builder.Services.AddTransient<UnitOfWork>();
 
 
-builder.Services.AddAutoMapper(typeof(AppMappingProfile));
-
+builder.Services.AddAutoMapper(typeof(ProjectMapping));
 
 
 var app = builder.Build();

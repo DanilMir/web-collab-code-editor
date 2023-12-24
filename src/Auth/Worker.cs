@@ -133,7 +133,7 @@ public class Worker : IHostedService
                 Name = "project_management",
                 Resources =
                 {
-                    clientId
+                    "project_management_service"
                 }
             });
         }
@@ -145,7 +145,7 @@ public class Worker : IHostedService
                 Name = "files",
                 Resources =
                 {
-                    clientId
+                    "files_services"
                 }
             });
         }

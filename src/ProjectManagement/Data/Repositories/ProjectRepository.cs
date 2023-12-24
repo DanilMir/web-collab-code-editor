@@ -1,6 +1,7 @@
+using ProjectManagement.Data.DbContexts;
 using ProjectManagement.Models;
 
-namespace ProjectManagement.Data;
+namespace ProjectManagement.Data.Repositories;
 
 public class ProjectRepository : IProjectRepository
 {

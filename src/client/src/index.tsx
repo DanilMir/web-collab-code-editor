@@ -20,7 +20,7 @@ const oidcConfig = {
     client_id: 'react-client',
     redirect_uri: 'http://localhost:3000/signin-oidc',
     post_logout_redirect_uri: 'http://localhost:3000/signout-callback-oidc',
-    scope: 'openid profile api1',
+    scope: 'openid profile project_management files',
     onSigninCallback: () => {
         window.history.replaceState({}, document.title, '/');
     }

@@ -26,7 +26,7 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> UploadFileAsync(IFormFile file, string projectId, string? prefix)
     {
-        var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
         if (await _projectsService.IsCurrentUserHaveAccess(accessToken, Guid.Parse(projectId)))
         {
             return Forbid();
@@ -49,7 +49,7 @@ public class ProjectsController : ControllerBase
     [HttpGet("{fileId}")]
     public async Task<IActionResult> GetFileByKeyAsync(string projectId ,string fileId)
     {
-        var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
         if (await _projectsService.IsCurrentUserHaveAccess(accessToken, Guid.Parse(projectId)))
         {
             return Forbid();
@@ -89,7 +89,7 @@ public class ProjectsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetFiles(string projectId, string? prefix)
     {
-        var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
         if (await _projectsService.IsCurrentUserHaveAccess(accessToken, Guid.Parse(projectId)))
         {
             return Forbid();
@@ -102,7 +102,7 @@ public class ProjectsController : ControllerBase
     [HttpDelete("{fileId}")]
     public async Task<IActionResult> DeleteFile(string projectId, string fileId)
     {
-        var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
         if (await _projectsService.IsCurrentUserHaveAccess(accessToken, Guid.Parse(projectId)))
         {
             return Forbid();
@@ -116,6 +116,37 @@ public class ProjectsController : ControllerBase
             BucketName = _projectsBucketName,
         };
         await _s3Client.DeleteObjectAsync(deleteRequest);
+        return Ok();
+    }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteFolder(string projectId, string folderKey)
+    {
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
+        if (await _projectsService.IsCurrentUserHaveAccess(accessToken, Guid.Parse(projectId)))
+        {
+            return Forbid();
+        }
+        
+        var listObjectsRequest = new ListObjectsV2Request
+        {
+            BucketName = _projectsBucketName,
+            Prefix = folderKey
+        };
+        
+        var listObjectsResponse = await _s3Client.ListObjectsV2Async(listObjectsRequest);
+
+        foreach (var s3Object in listObjectsResponse.S3Objects)
+        {
+            var deleteObjectRequest = new DeleteObjectRequest
+            {
+                BucketName = _projectsBucketName,
+                Key = s3Object.Key
+            };
+
+            await _s3Client.DeleteObjectAsync(deleteObjectRequest);
+        }
+
         return Ok();
     }
 
