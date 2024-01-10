@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {ProjectEditorModel} from "../moduls/projects/ProjectModel";
 import {useRootStore} from "../hooks/useRootStore";
 import {useAuth} from "react-oidc-context";
-import ProjectEditorForm from "../components/ProjectEditorForm";
-import LoginWarning from "../components/LoginWarning";
+import ProjectEditorForm from "../components/projects/ProjectEditorForm";
+import LoginWarning from "../components/generic/LoginWarning";
+import {ProjectEditorModel} from "../moduls/project/ProjectModel";
 
 export default function EditProjectPage() {
     const [formData, setFormData] = useState<ProjectEditorModel>({
@@ -47,7 +47,7 @@ export default function EditProjectPage() {
 
     return (
         <>
-            <ProjectEditorForm handleSubmit={handleSubmit} handleChange={handleChange} formData={formData} title="Edit project"/>
+            <ProjectEditorForm handleSubmit={handleSubmit} handleChange={handleChange} formData={formData} title="Edit Project"/>
         </>
     )
 }

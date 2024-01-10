@@ -16,7 +16,6 @@ import {useAuth} from "react-oidc-context";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DataObjectIcon from '@mui/icons-material/DataObject';
-const settings = ['Profile', 'Account', 'Dashboard'];
 
 export default function NavBar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -185,12 +184,6 @@ export default function NavBar() {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                             >
-                                {settings.map((setting) => (
-                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">{setting}</Typography>
-                                    </MenuItem>
-                                ))}
-
                                 <MenuItem onClick={() => {
                                     auth.signoutRedirect()
                                     handleCloseUserMenu()

@@ -1,20 +1,16 @@
 import ProjectsService from "./ProjectsService";
 import {action, makeAutoObservable} from "mobx"
-import ProjectModel, {GetProjectResponseModel, ProjectEditorModel} from "./ProjectModel";
+import ProjectsModel from "../common/ProjectModel";
+import {GetProjectsResponseModel} from "./ProjectsModel";
 
 export default class ProjectsStore {
-    projectService;
+    projectsService;
     isLoading = true;
 
-    projectArray: ProjectModel[] = [];
+    projectArray: ProjectsModel[] = [];
     allProjectsCount: number = 0
-
-    project: ProjectEditorModel = new ProjectEditorModel("", "", 0, "")
-
-
-
     constructor() {
-        this.projectService = new ProjectsService();
+        this.projectsService = new ProjectsService();
         makeAutoObservable(this, {
             updateProjects: action,
             setLoading: action
@@ -22,7 +18,7 @@ export default class ProjectsStore {
     }
 
 
-    updateProjects(projectResponseModel: GetProjectResponseModel) {
+    updateProjects(projectResponseModel: GetProjectsResponseModel) {
         this.projectArray = projectResponseModel.projects;
         this.allProjectsCount = projectResponseModel.allProjectsCount;
     }
@@ -31,41 +27,9 @@ export default class ProjectsStore {
         this.isLoading = isLoading
     }
 
-    setProject(project: ProjectEditorModel) {
-        this.project = project
-    }
-
-    getProject(id: string, token: string) {
-        this.setLoading(true);
-        this.projectService
-            .getProject(id, token)
-            .then(result => {
-                this.setProject(result.data)
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            .finally(() => {
-                this.setLoading(false);
-            })
-    }
-
-    createProject(project: ProjectEditorModel, token: string) {
-        this.projectService
-            .createProject(project, token)
-            .then(result => {
-                console.log(result)
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            .finally(() => {
-            })
-    }
-
     getActiveProjects(offset: number, limit: number, token: string) {
         this.setLoading(true);
-        this.projectService.getActiveProjects(offset, limit, token)
+        this.projectsService.getActiveProjects(offset, limit, token)
             .then(result => {
                 this.updateProjects(result.data)
                 console.log(result)
@@ -78,29 +42,5 @@ export default class ProjectsStore {
             })
     }
 
-    editProject(project: ProjectEditorModel, token: string) {
-        this.projectService
-            .editProject(project, token)
-            .then(result => {
-                console.log(result)
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            .finally(() => {
-            })
-    }
 
-    deleteProject(project: ProjectEditorModel, token: string) {
-        this.projectService
-            .createProject(project, token)
-            .then(result => {
-                console.log(result)
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            .finally(() => {
-            })
-    }
 }
