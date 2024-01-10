@@ -14,7 +14,7 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import {useRootStore} from "../hooks/useRootStore";
+import {useRootStore} from "../../hooks/useRootStore";
 import {observer} from "mobx-react";
 import {useAuth} from "react-oidc-context";
 import Button from "@mui/material/Button";
@@ -91,7 +91,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 
 export const CustomPaginationActionsTable = observer(() => {
 
-        const {projectStore} = useRootStore();
+        const {projectsStore} = useRootStore();
         const auth = useAuth();
 
         const [page, setPage] = React.useState(0);
@@ -106,7 +106,7 @@ export const CustomPaginationActionsTable = observer(() => {
         }
 
         useEffect(() => {
-            projectStore.getActiveProjects(page, rowsPerPage, auth.user?.access_token!);
+            projectsStore.getActiveProjects(page, rowsPerPage, auth.user?.access_token!);
         }, []);
 
         const handleChangePage = (
@@ -126,7 +126,7 @@ export const CustomPaginationActionsTable = observer(() => {
         };
 
         const handleChanges = (pages: number, limit: number) => {
-            projectStore.getActiveProjects(pages, limit, auth.user?.access_token!)
+            projectsStore.getActiveProjects(pages, limit, auth.user?.access_token!)
         }
 
         return (
@@ -135,25 +135,22 @@ export const CustomPaginationActionsTable = observer(() => {
                     variant="contained"
                     startIcon={<ReplayIcon/>}
                         onClick={() => {
-                    projectStore.getActiveProjects(page, rowsPerPage, auth.user?.access_token!)
-                }}>Update projects list</Button>
+                    projectsStore.getActiveProjects(page, rowsPerPage, auth.user?.access_token!)
+                }}
+                sx={{minWidth: '2px'}}
+                >Update projects list</Button>
 
-                <Button variant="outlined" component={Link} to="/projects/create">Create project</Button>
-                <TableContainer component={Paper}>
+                <Button sx={{marginLeft: "15px"}} variant="outlined" component={Link} to="/projects/create">Create project</Button>
+
+                <TableContainer component={Paper} sx={{marginTop: "20px"}}>
                     <Table sx={{minWidth: 500}} aria-label="custom pagination table">
                         <TableBody>
-                            {projectStore.projectArray.map((row) => (
+                            {projectsStore.projectArray.map((row) => (
                                 <TableRow key={row.id} component={Link} to={`/projects/${row.id}/`} style={{
                                     textDecoration: 'none'
                                 }}>
-                                    <TableCell scope="row">
-                                        {row.id}
-                                    </TableCell>
                                     <TableCell component="th" scope="row">
                                         {row.title}
-                                    </TableCell>
-                                    <TableCell style={{width: 160}} align="right">
-                                        {row.description}
                                     </TableCell>
                                     <TableCell style={{width: 160}} align="right">
                                         {row.programmingLanguage}
@@ -167,7 +164,7 @@ export const CustomPaginationActionsTable = observer(() => {
                                 <TablePagination
                                     rowsPerPageOptions={[5, 10, 25, 50]}
                                     colSpan={3}
-                                    count={projectStore.allProjectsCount}
+                                    count={projectsStore.allProjectsCount}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     SelectProps={{

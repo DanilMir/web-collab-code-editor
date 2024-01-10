@@ -1,9 +1,9 @@
 import {useAuth} from "react-oidc-context";
-import {CustomPaginationActionsTable} from "../components/PaginationProjectsTable";
+import {CustomPaginationActionsTable} from "../components/projects/PaginationProjectsTable";
 import Box from '@mui/material/Box';
 import {observer} from "mobx-react";
 import {Navigate} from "react-router-dom";
-import LoginWarning from "../components/LoginWarning";
+import LoginWarning from "../components/generic/LoginWarning";
 
 export const ProjectsListPage = observer(() => {
         const auth = useAuth();
@@ -18,7 +18,7 @@ export const ProjectsListPage = observer(() => {
 
         return (
             <>
-                <Box px={30} pt={4}>
+                <Box px={60} pt={4}>
                     <div>
                         <CustomPaginationActionsTable/>
                     </div>

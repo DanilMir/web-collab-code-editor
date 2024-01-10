@@ -1,7 +1,7 @@
 import {
     createTheme,
     CssBaseline,
-    FormControl,
+    FormControl, Grid,
     InputLabel,
     makeStyles,
     Select,
@@ -16,8 +16,9 @@ import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import React from "react";
-import {ProjectEditorModel} from "../moduls/projects/ProjectModel";
+import React, {useState} from "react";
+import {red} from "@mui/material/colors";
+import {ProjectEditorModel} from "../../moduls/project/ProjectModel";
 
 interface IParams {
     handleSubmit: (e: any) => void,
@@ -27,9 +28,10 @@ interface IParams {
 }
 
 export default function ProjectEditorForm({handleSubmit, handleChange, formData, title}: IParams) {
+
     return (
         <>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xs" sx={{paddingBottom: '20px'}}>
                 <CssBaseline/>
 
                 <Box style={{
@@ -38,14 +40,6 @@ export default function ProjectEditorForm({handleSubmit, handleChange, formData,
                     flexDirection: 'column',
                     alignItems: 'center'
                 }}>
-
-                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                        <CodeIcon/>
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        {title}
-                    </Typography>
-
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                         <TextField fullWidth onChange={handleChange} name="title" value={formData.title} required
                                    id="title" label="Title" variant="outlined"
@@ -86,7 +80,7 @@ export default function ProjectEditorForm({handleSubmit, handleChange, formData,
                             </Select>
                         </FormControl>
                         <Button fullWidth type="submit" variant="contained" color="primary" sx={{mt: 3}}>
-                            Create Project
+                            {title}
                         </Button>
 
                     </Box>

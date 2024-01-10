@@ -1,9 +1,10 @@
 import {Editor} from "@monaco-editor/react";
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import * as Y from "yjs"
 import {WebsocketProvider} from "y-websocket";
 import {MonacoBinding} from "y-monaco";
-
+import "./CollaborativeEditor.css"
+import {keys} from "mobx";
 
 interface Props {
     height?: string | number | undefined,
@@ -17,6 +18,9 @@ export default function CollaborativeEditor(props: Props) {
 
     const editorRef = useRef(null)
 
+
+    const [cssStyle, setCssStyle] = useState("");
+
     function handleEditorDidMount(editor: any, monaco: any) {
         editorRef.current = editor;
 
@@ -28,21 +32,20 @@ export default function CollaborativeEditor(props: Props) {
 
         const awareness = provider.awareness
 
-        // You can observe when a user updates their awareness information
-        awareness.on('change', (changes: any) => {
-            // Whenever somebody updates their awareness information,
-            // we log all awareness information from all users.
-            console.log(Array.from(awareness.getStates().values()))
-        })
-
-        // You can think of your own awareness information as a key-value store.
-        // We update our "user" field to propagate relevant user information.
-        awareness.setLocalStateField('user', {
-            // Define a print name that should be displayed
-            name: "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0"),
-            // Define a color that should be associated to the user:
-            color: "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0")
-        })
+        // // You can observe when a user updates their awareness information
+        // awareness.on('change', (changes: any) => {
+        //     // Whenever somebody updates their awareness information,
+        //     // we log all awareness information from all users.
+        // })
+        //
+        // // You can think of your own awareness information as a key-value store.
+        // // We update our "user" field to propagate relevant user information.
+        // awareness.setLocalStateField('user', {
+        //     // Define a print name that should be displayed
+        //     name: "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0"),
+        //     // Define a color that should be associated to the user:
+        //     color: "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0")
+        // })
 
 
         // @ts-ignore
@@ -55,7 +58,7 @@ export default function CollaborativeEditor(props: Props) {
 
 
     return (
-        <>
+        <div>
             <Editor
                 height={props.height}
                 width={props.width}
@@ -65,6 +68,6 @@ export default function CollaborativeEditor(props: Props) {
                 onMount={handleEditorDidMount}
                 theme="vs-dark"
             />
-        </>
+        </div>
     )
 }
