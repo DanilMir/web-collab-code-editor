@@ -13,6 +13,7 @@ import LoginWarning from "../components/generic/LoginWarning";
 import {observer} from "mobx-react";
 import Typography from "@mui/material/Typography";
 import Loading from "../components/generic/Loading";
+import Forbidden from "./errors/Forbidden";
 
 type Params = {
     id: string
@@ -41,9 +42,9 @@ export const ProjectPage = observer(() => {
             return <Loading/>
         }
 
-        if (!projectStore.haveAccessToProject) {
-            return <>403 Error</>;
-        }
+        // if (!projectStore.haveAccessToProject) {
+        //     return <Forbidden/>
+        // }
 
 
         let content;
@@ -89,10 +90,10 @@ export const ProjectPage = observer(() => {
                             >
                                 AI Chat
                             </Button>
-                            <Button
-                                onClick={() => setMenu(2)}
-                                variant={menu == 2 ? "contained" : "outlined"}
-                            >Settings</Button>
+                            {/*<Button*/}
+                            {/*    onClick={() => setMenu(2)}*/}
+                            {/*    variant={menu == 2 ? "contained" : "outlined"}*/}
+                            {/*>Settings</Button>*/}
                         </ButtonGroup>
                         <Box>
                             {content}

@@ -1,7 +1,17 @@
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 export default function LoginWarning() {
     return (
         <>
-            <p>You are not logged in. Please login.</p>
+            <Container>
+                <Box mt={5}>
+                    <Typography variant="h4" color="error">
+                        401 Unauthorized
+                    </Typography>
+                </Box>
+            </Container>
         </>
     )
 }
