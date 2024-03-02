@@ -1,6 +1,7 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using FileService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FileService.Controllers;
@@ -46,8 +47,8 @@ public class ProjectsController : ControllerBase
         return Ok($"File {file.FileName} uploaded to S3 successfully!");
     }
 
-    [HttpGet("{fileId}")]
-    public async Task<IActionResult> GetFileByKeyAsync(string projectId ,string fileId)
+    [HttpGet("getFile")]
+    public async Task<IActionResult> GetFileByKeyAsync(string projectId, string fileId)
     {
         var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
         if (await _projectsService.IsCurrentUserHaveAccess(accessToken, Guid.Parse(projectId)))
@@ -96,7 +97,11 @@ public class ProjectsController : ControllerBase
         }
         
         prefix = prefix is null ? projectId : $"{projectId}/{prefix.TrimEnd('/')}";
-        return Ok(ListObjects(projectId, prefix).ToListAsync());
+
+        var temp =await ListObjects(projectId, prefix).ToListAsync();
+        var result = temp.SelectMany(list => list);
+        
+        return Ok(result);
     }
 
     [HttpDelete("{fileId}")]
