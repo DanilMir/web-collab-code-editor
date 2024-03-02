@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService", "FileService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncService", "SyncService\SyncService.csproj", "{D1065C1B-B473-4A82-802A-B1EC4D620058}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{5CA4DF0C-5528-4671-9A07-F92049F60FDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{D1065C1B-B473-4A82-802A-B1EC4D620058}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1065C1B-B473-4A82-802A-B1EC4D620058}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1065C1B-B473-4A82-802A-B1EC4D620058}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CA4DF0C-5528-4671-9A07-F92049F60FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CA4DF0C-5528-4671-9A07-F92049F60FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CA4DF0C-5528-4671-9A07-F92049F60FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CA4DF0C-5528-4671-9A07-F92049F60FDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
