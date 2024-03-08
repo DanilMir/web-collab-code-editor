@@ -16,7 +16,7 @@ public class ProjectManagement : IProjectManagement
     
     public async Task<Project> GetProject(string token, Guid id)
     {
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",token);
         var response = await _client.GetAsync($"projects/{id}");
         response.EnsureSuccessStatusCode();
         await using var contentStream =
