@@ -1,3 +1,4 @@
+using Sandbox.Models;
 using Sandbox.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +15,14 @@ builder.Services.AddHttpClient<IProjectFilesService, ProjectFilesService>(httpCl
     httpClient.BaseAddress = new Uri(builder.Configuration["Clients:FileService:Url"] ?? String.Empty);
 });
 
-builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddHttpClient<IProjectManagement, ProjectManagement>(httpClient =>
+{
+    httpClient.BaseAddress = new Uri(builder.Configuration["Clients:ProjectManagement:Url"] ?? String.Empty);
+});
 
+builder.Services.AddSingleton<IDockerFileGeneratorFactory, DockerFileGeneratorFactory>();
+builder.Services.AddSingleton<IContainerService, ContainerService>();
+builder.Services.AddScoped<IStorageService, StorageService>();
 
 var app = builder.Build();
 

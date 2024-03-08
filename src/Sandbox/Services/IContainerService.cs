@@ -1,9 +1,11 @@
+using Docker.DotNet.Models;
 using Sandbox.Models;
 
 namespace Sandbox.Services;
 
 public interface IContainerService
 {
-    void CreateDockerFile(Project project);
-    void RunContainer(Project project);
+    Task<ContainerRunResult> RunContainer(Guid projectId);
+
+    Task<List<ContainerListResponse>> GetContainersAsync();
 }
