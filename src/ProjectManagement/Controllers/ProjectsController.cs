@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Data;
 using ProjectManagement.Models;
 using ProjectManagement.Services;
+using ProjectManagement.Services.ProjectStructure;
 
 namespace ProjectManagement.Controllers;
 
@@ -16,13 +17,15 @@ public class ProjectsController : ControllerBase
     private readonly UnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly FilesService _filesService;
+    private readonly IProjectGeneratorFactory _projectGeneratorFactory;
 
 
-    public ProjectsController(UnitOfWork unitOfWork, IMapper mapper, FilesService filesService)
+    public ProjectsController(UnitOfWork unitOfWork, IMapper mapper, FilesService filesService, IProjectGeneratorFactory projectGeneratorFactory)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _filesService = filesService;
+        _projectGeneratorFactory = projectGeneratorFactory;
     }
 
     
@@ -86,8 +89,9 @@ public class ProjectsController : ControllerBase
         var projectDto = _mapper.Map<ProjectDto>(project);
         
         var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
-        //todo: refactor
-        await _filesService.CreatePythonTemplateProject(project.Id.ToString(), accessToken);
+        await _projectGeneratorFactory.GetProjectGenerator(project.ProgrammingLanguage).Generate(project.Id, accessToken);
+        
+        // await _filesService.CreatePythonTemplateProject(project.Id.ToString(), accessToken);
         
         return Ok(projectDto);
     }

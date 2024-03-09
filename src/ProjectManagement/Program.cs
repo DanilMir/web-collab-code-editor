@@ -6,6 +6,7 @@ using ProjectManagement.Data.DbContexts;
 using ProjectManagement.Data.Repositories;
 using ProjectManagement.Mappings;
 using ProjectManagement.Services;
+using ProjectManagement.Services.ProjectStructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,7 @@ builder.Services.AddCors(
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddTransient<IAccessRepository, AccessRepository>();
 builder.Services.AddTransient<UnitOfWork>();
+builder.Services.AddScoped<IProjectGeneratorFactory, ProjectGeneratorFactory>();
 
 
 builder.Services.AddAutoMapper(typeof(ProjectMapping));
