@@ -19,9 +19,7 @@ public class ProjectManagement : IProjectManagement
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",token);
         var response = await _client.GetAsync($"projects/{id}");
         response.EnsureSuccessStatusCode();
-        await using var contentStream =
-            await response.Content.ReadAsStreamAsync();
-        var projectDto = await JsonSerializer.DeserializeAsync<ProjectDto>(contentStream);
+        var projectDto = await response.Content.ReadFromJsonAsync<ProjectDto>();
         if (projectDto == null)
         {
             throw new Exception();

@@ -75,7 +75,7 @@ export default function ProjectEditorForm({handleSubmit, handleChange, formData,
                                 value={formData.programmingLanguage}
                                 onChange={handleChange}
                             >
-                                <MenuItem value="C#">C#</MenuItem>
+                                <MenuItem value="csharp">C#</MenuItem>
                                 <MenuItem value="python">Python</MenuItem>
                             </Select>
                         </FormControl>

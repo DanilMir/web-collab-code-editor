@@ -37,11 +37,11 @@ public class ContainerController : Controller
     {
         try
         {
-            // var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            // var project = await _projectManagement.GetProject(accessToken, projectId);
-            // await _projectFilesService.DownloadProject(projectId, accessToken);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var project = await _projectManagement.GetProject(accessToken, projectId);
+            await _projectFilesService.DownloadProject(projectId, accessToken);
             
-            var dockerfile = _dockerFileGeneratorFactory.GetDockerFileGenerator("csharp").GenerateDockerFile(); //todo: set programmingLanguage
+            var dockerfile = _dockerFileGeneratorFactory.GetDockerFileGenerator(project.ProgrammingLanguage).GenerateDockerFile(); //todo: set programmingLanguage
             await _storage.SaveFile(dockerfile, $"projects/{projectId}/Dockerfile");
             
             var result = await _containerService.RunContainer(projectId);

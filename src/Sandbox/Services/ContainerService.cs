@@ -77,7 +77,7 @@ public class ContainerService : IContainerService
             {
                 if (message.Error != null)
                 {
-                    //todo: throw error exception
+                    Console.WriteLine(message.ErrorMessage);
                 }
             };
 
