@@ -50,7 +50,7 @@ public class ContainerService : IContainerService
             ExposedPorts = new Dictionary<string, EmptyStruct>
             {
                 { "6901", new EmptyStruct() }
-            },
+            }
         });
         
         await _dockerClient.Containers.StartContainerAsync(

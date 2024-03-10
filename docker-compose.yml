@@ -66,9 +66,9 @@ services:
   y-websocket:
     image: y-websocket
     build: ./src/y-websocket/
-    # environment:
-    #   - CALLBACK_URL=http://localhost:8123/
-    #   - CALLBACK_OBJECTS={"monaco":"Text"}
+    environment:
+      - CALLBACK_URL=http://sync-service:80/sync/callback/
+      - CALLBACK_OBJECTS={"monaco":"Text"}
     ports:
       - "${Y_WEBSOCKET_EXTERNAL_PORT}:${Y_WEBSOCKET_PORT}"
     
@@ -96,4 +96,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 5003:80
-
+      
+  sync-service:
+    image: sync-service
+    build: ./src/SyncService
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Clients:Files:Url=http://file-service:80
+    ports:
+      - 5004:80

@@ -41,7 +41,7 @@ public class ContainerController : Controller
             var project = await _projectManagement.GetProject(accessToken, projectId);
             await _projectFilesService.DownloadProject(projectId, accessToken);
             
-            var dockerfile = _dockerFileGeneratorFactory.GetDockerFileGenerator(project.ProgrammingLanguage).GenerateDockerFile(); //todo: set programmingLanguage
+            var dockerfile = _dockerFileGeneratorFactory.GetDockerFileGenerator(project.ProgrammingLanguage).GenerateDockerFile();
             await _storage.SaveFile(dockerfile, $"projects/{projectId}/Dockerfile");
             
             var result = await _containerService.RunContainer(projectId);

@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using SyncService.Models;
 using SyncService.Services;
@@ -16,10 +17,11 @@ public class SyncFilesController : Controller
 
     [HttpPost]
     [Route("sync/callback")]
-    public async Task<IActionResult> Callback([FromBody] CallbackRequestModel callbackRequestModel)
+    public async Task<IActionResult> Callback(CallbackRequestModel callbackRequestModel)
     {
+        Console.WriteLine($"test: {callbackRequestModel.Room}");
         var (projectId, prefix, fileName) = ParseRoom(callbackRequestModel.Room);
-        await _filesService.UploadFile(projectId, prefix, fileName, callbackRequestModel.Data.Monaco.Content);
+        await _filesService.UploadFile(projectId, prefix, fileName, Encoding.ASCII.GetBytes(callbackRequestModel.Data.Monaco.Content));
         return Ok();
     }
     

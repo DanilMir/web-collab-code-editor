@@ -18,7 +18,6 @@ export default function CollaborativeEditor(props: Props) {
 
     const editorRef = useRef(null)
 
-
     const [cssStyle, setCssStyle] = useState("");
 
     function handleEditorDidMount(editor: any, monaco: any) {
