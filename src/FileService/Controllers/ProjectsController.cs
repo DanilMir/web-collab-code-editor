@@ -27,11 +27,11 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> UploadFileAsync(IFormFile file, string projectId, string? prefix)
     {
-        var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
-        if (await _projectsService.IsCurrentUserHaveAccess(accessToken, Guid.Parse(projectId)))
-        {
-            return Forbid();
-        }
+        // var accessToken = HttpContext.Request.Headers["Authorization"].ToString()[7..];
+        // if (await _projectsService.IsCurrentUserHaveAccess(accessToken, Guid.Parse(projectId)))
+        // {
+        //     return Forbid();
+        // }
         
         prefix = prefix is null ? projectId : $"{projectId}/{prefix.TrimEnd('/')}";
         var bucketExists = await _bucketsService.IsBucketExist(_projectsBucketName);

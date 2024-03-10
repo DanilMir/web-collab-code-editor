@@ -4,19 +4,19 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["SyncService/SyncService.csproj", "SyncService/"]
-RUN dotnet restore "SyncService/SyncService.csproj"
+COPY ["SyncService.csproj", "."]
+RUN dotnet restore "./SyncService.csproj"
 COPY . .
-WORKDIR "/src/SyncService"
-RUN dotnet build "SyncService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/."
+RUN dotnet build "SyncService.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "SyncService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "SyncService.csproj" -c Release -o /app/publish
 
 FROM base AS final
+
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "SyncService.dll"]

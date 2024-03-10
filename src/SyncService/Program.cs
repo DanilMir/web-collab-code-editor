@@ -13,7 +13,11 @@ builder.Services.AddHttpClient<FilesService>(client =>
         client.BaseAddress = new Uri(builder.Configuration["Clients:Files:Url"] ?? String.Empty)
     );
 
+builder.Services.AddHttpLogging(o => { });
+
 var app = builder.Build();
+
+app.UseHttpLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

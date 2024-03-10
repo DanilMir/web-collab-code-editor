@@ -47,6 +47,9 @@ export const ProjectPage = observer(() => {
         // }
 
 
+        let room = `${id}::Program.cs`;
+
+
         let content;
 
         switch (menu) {
@@ -73,7 +76,7 @@ export const ProjectPage = observer(() => {
                             width="100wh"
                             language="javascript"
                             readOnly={false}
-                            room={id!.toString()}
+                            room={room}
                         />
                     </Grid>
                     <Grid item xs={6}>
