@@ -24,6 +24,21 @@ builder.Services.AddSingleton<IDockerFileGeneratorFactory, DockerFileGeneratorFa
 builder.Services.AddSingleton<IContainerService, ContainerService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 
+builder.Services.AddCors(
+    options =>
+    {
+        options.AddPolicy(
+            "default", policy =>
+            {
+                policy
+                    .WithOrigins(
+                        "http://localhost:3000"
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,6 +50,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("default");
 app.UseAuthorization();
 
 app.MapControllers();

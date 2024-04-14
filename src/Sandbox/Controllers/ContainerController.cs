@@ -53,4 +53,41 @@ public class ContainerController : Controller
             return BadRequest();
         }
     }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteContainer(Guid projectId)
+    {
+        try
+        {
+            await _containerService.StopDeleteContainer(projectId);
+            return Ok();
+        }
+        catch
+        {
+            return BadRequest();
+        }
+    }
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateContainer(Guid projectId)
+    {
+        try
+        {
+            await _containerService.StopDeleteContainer(projectId);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var project = await _projectManagement.GetProject(accessToken, projectId);
+            await _projectFilesService.DownloadProject(projectId, accessToken);
+            
+            var dockerfile = _dockerFileGeneratorFactory.GetDockerFileGenerator(project.ProgrammingLanguage).GenerateDockerFile();
+            await _storage.SaveFile(dockerfile, $"projects/{projectId}/Dockerfile");
+            
+            var result = await _containerService.RunContainer(projectId);
+            
+            return Ok(result);
+        }
+        catch
+        {
+            return BadRequest();
+        }
+    }
 }

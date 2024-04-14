@@ -1,19 +1,20 @@
 import {useParams} from "react-router-dom";
 import CollaborativeEditor from "../components/editor/CollaborativeEditor";
-import {ButtonGroup, Grid} from "@mui/material";
-import Button from "@mui/material/Button";
+import {CircularProgress, Grid, SvgIcon, Tab} from "@mui/material";
 import Box from "@mui/material/Box";
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import {useEffect, useState} from "react";
 import Terminal from "../components/remote-run/Terminal";
-import AIChat from "../components/ai-chat/AIChat";
-import Settings from "../components/projects/Settings";
 import {useRootStore} from "../hooks/useRootStore";
 import {useAuth} from "react-oidc-context";
 import LoginWarning from "../components/generic/LoginWarning";
 import {observer} from "mobx-react";
-import Typography from "@mui/material/Typography";
 import Loading from "../components/generic/Loading";
-import Forbidden from "./errors/Forbidden";
+import BrowserIcon from "../components/icons/BrowserIcon"
+import Typography from "@mui/material/Typography";
+
 
 type Params = {
     id: string
@@ -21,9 +22,13 @@ type Params = {
 
 export const ProjectPage = observer(() => {
         const {id} = useParams<Params>();
-        const [menu, setMenu] = useState<number>(0);
-        const {projectStore} = useRootStore();
+        const [tab, setTab] = useState<string>('1');
+        const {projectStore, sandboxStore} = useRootStore();
         const auth = useAuth();
+
+        const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+            setTab(newValue);
+        };
 
         useEffect(() => {
             projectStore.getProject(id!, auth.user?.access_token!)
@@ -38,7 +43,7 @@ export const ProjectPage = observer(() => {
             return <LoginWarning/>;
         }
 
-        if(projectStore.isLoading) {
+        if (projectStore.isLoading) {
             return <Loading/>
         }
 
@@ -46,25 +51,18 @@ export const ProjectPage = observer(() => {
         //     return <Forbidden/>
         // }
 
-
-        let room = `${id}::Program.cs`;
-
-
-        let content;
-
-        switch (menu) {
-            case 0:
-                content = <Terminal/>;
-                break;
-            case 1:
-                content = <AIChat/>;
-                break;
-            case 2:
-                content = <Settings/>;
-                break;
-            default:
-                content = <div>Неизвестный тип</div>;
+        function lang(language: string) {
+            switch(language) {
+                case "csharp":
+                    return "csharp";
+                default:
+                    return "plaintext";
+            }
         }
+
+        let room = `${id}::${GetRoomFile(projectStore.project.programmingLanguage)}`;
+
+        console.log(room);
 
         return (
             <>
@@ -74,33 +72,69 @@ export const ProjectPage = observer(() => {
                         <CollaborativeEditor
                             height="100vh"
                             width="100wh"
-                            language="javascript"
+                            language={lang(projectStore.project.programmingLanguage)}
                             readOnly={false}
                             room={room}
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <ButtonGroup>
-                            <Button
-                                onClick={() => setMenu(0)}
-                                variant={menu == 0 ? "contained" : "outlined"}
-                            >
-                                Terminal
-                            </Button>
-                            <Button
-                                onClick={() => setMenu(1)}
-                                variant={menu == 1 ? "contained" : "outlined"}
-                            >
-                                AI Chat
-                            </Button>
-                            {/*<Button*/}
-                            {/*    onClick={() => setMenu(2)}*/}
-                            {/*    variant={menu == 2 ? "contained" : "outlined"}*/}
-                            {/*>Settings</Button>*/}
-                        </ButtonGroup>
-                        <Box>
-                            {content}
-                        </Box>
+                        <TabContext value={tab}>
+                            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+                                <TabList variant="fullWidth" onChange={handleChange} aria-label="lab API tabs example">
+                                    <Tab label="Sandbox" value="1"/>
+                                </TabList>
+                            </Box>
+                            <TabPanel value="1">
+                                <Box sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    flexDirection: 'column'
+                                }}>
+                                    {
+                                        sandboxStore.isLoading ?
+                                            <Box sx={{
+                                                display: "flex",
+                                                height: '75vh',
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                flexDirection: 'column'
+                                            }}>
+                                                <svg width={0} height={0}>
+                                                    <defs>
+                                                        <linearGradient id="my_gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                            <stop offset="0%" stopColor="#e11cd5"/>
+                                                            <stop offset="100%" stopColor="#2CB5E0"/>
+                                                        </linearGradient>
+                                                    </defs>
+                                                </svg>
+                                                <CircularProgress sx={{'svg circle': {stroke: 'url(#my_gradient)'}}}/>
+                                            </Box>
+                                            :
+                                            <Box>
+                                                {
+                                                    sandboxStore.isActive ?
+                                                        <Terminal port={sandboxStore.sandbox.port}
+                                                                  password={"vncpassword"}/>
+                                                        :
+                                                        <Box sx={{
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            flexDirection: 'column'
+                                                        }}>
+                                                            <SvgIcon sx={{width: "500px", height: "500px"}}>
+                                                                <BrowserIcon/>
+                                                            </SvgIcon>
+                                                            <Typography variant="h4" gutterBottom>To build the code
+                                                                press <b>RUN</b></Typography>
+                                                        </Box>
+                                                }
+                                            </Box>
+                                    }
+                                </Box>
+                            </TabPanel>
+                        </TabContext>
                     </Grid>
                 </Grid>
 
@@ -109,3 +143,10 @@ export const ProjectPage = observer(() => {
         )
     }
 );
+
+function GetRoomFile(projectType: string) {
+    switch (projectType) {
+        case "csharp":
+            return "Program.cs";
+    }
+}

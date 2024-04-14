@@ -16,6 +16,8 @@ import {useAuth} from "react-oidc-context";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DataObjectIcon from '@mui/icons-material/DataObject';
+import {useRootStore} from "../../hooks/useRootStore";
+import {RestartAlt, Stop} from "@mui/icons-material";
 
 export default function NavBar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -23,6 +25,7 @@ export default function NavBar() {
 
     const auth = useAuth();
 
+    const {sandboxStore, projectStore} = useRootStore();
     const location = useLocation();
     const projectRegex = new RegExp('^\/projects\/[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}/?$');
 
@@ -138,7 +141,7 @@ export default function NavBar() {
                                     mt: 2
                                 }}
                             >
-                                <AddCircleOutlineIcon sx={{ color: "white" }}/>
+                                <AddCircleOutlineIcon sx={{color: "white"}}/>
                             </IconButton>
                         </Link>
                     </Box>
@@ -146,15 +149,42 @@ export default function NavBar() {
                     {projectRegex.test(location.pathname) ?
                         <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
 
-                                <Button
-                                    onClick={handleCloseNavMenu}
-                                    variant="contained"
-                                    color="success"
-                                    sx={{my: 2, color: 'white', }}
-                                    startIcon={<PlayArrowIcon/>}
-                                >
-                                    Run
-                                </Button>
+                            <Button
+                                onClick={() => {
+                                    sandboxStore.runProject(projectStore.currentId, auth.user?.access_token!);
+                                    handleCloseUserMenu()
+                                }}
+                                variant="contained"
+                                color="success"
+                                sx={{my: 2, color: 'white',}}
+                                startIcon={<PlayArrowIcon/>}
+                            >
+                                Run
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    sandboxStore.updateProject(projectStore.currentId, auth.user?.access_token!);
+                                    handleCloseUserMenu()
+                                }}
+                                variant="contained"
+                                color="secondary"
+                                sx={{my: 2, color: 'white',}}
+                                startIcon={<RestartAlt/>}
+                            >
+                                Restart
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    sandboxStore.deleteProject(projectStore.currentId, auth.user?.access_token!);
+                                    handleCloseUserMenu()
+                                }}
+                                variant="contained"
+                                color="error"
+                                sx={{my: 2, color: 'white',}}
+                                startIcon={<Stop/>}
+                            >
+                                Stop
+                            </Button>
 
                         </Box> :
                         null

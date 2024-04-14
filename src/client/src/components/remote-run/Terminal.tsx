@@ -1,15 +1,20 @@
 import React from 'react';
 import {VncScreen} from "react-vnc";
 
-export default function Terminal() {
+interface Props {
+    port: number,
+    password: string
+}
+
+export default function Terminal(props: Props) {
     return (
         <>
             <VncScreen
-                url='ws://localhost:6901'
+                url={`ws://localhost:${props.port}`}
                 scaleViewport
                 style={{
                     width: '50vw',
-                    height: '75vh',
+                    height: '80vh',
                 }}
                 autoConnect={true}
                 rfbOptions={{credentials : {password: "vncpassword"}}}
