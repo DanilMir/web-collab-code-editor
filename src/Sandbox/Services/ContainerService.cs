@@ -50,7 +50,8 @@ public class ContainerService : IContainerService
             ExposedPorts = new Dictionary<string, EmptyStruct>
             {
                 { "6901", new EmptyStruct() }
-            }
+            },
+            Env = new List<string>() {"VNC_RESOLUTION=800x600"}
         });
         
         await _dockerClient.Containers.StartContainerAsync(
@@ -95,9 +96,15 @@ public class ContainerService : IContainerService
             return null;
         }
 
-        var port = container.Ports.FirstOrDefault(item => item.PrivatePort == 6901).PublicPort;
+        var port = container.Ports.FirstOrDefault(item => item.PrivatePort == 6901);
+
+        if (port == null)
+        {
+            await _dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters { Force = true });
+            return null;
+        }
         
-        return port;
+        return port.PublicPort;
     }
     
     public async Task<List<ContainerListResponse>> GetContainersAsync()
@@ -164,6 +171,18 @@ public class ContainerService : IContainerService
         foreach (string directory in directories)
         {
             AddDirectoryFilesToTar(directory, tarArchive, rootDirectory);
+        }
+    }
+
+    public async Task StopDeleteContainer(Guid projectId)
+    {
+        var containers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters { All = true });
+        var container = containers.FirstOrDefault(c => c.Names.Contains($"/{projectId}"));
+
+        if (container != null)
+        {
+            await _dockerClient.Containers.StopContainerAsync(container.ID, new ContainerStopParameters());
+            await _dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters());
         }
     }
 }

@@ -9,6 +9,7 @@ export default class ProjectStore {
     haveAccessToProject : boolean = false
     isLoading = true;
 
+    currentId: string = "";
     constructor() {
 
         makeAutoObservable(this)
@@ -31,6 +32,7 @@ export default class ProjectStore {
             .then(result => {
                 this.haveAccessToProject = true
                 this.setProject(result.data)
+                this.currentId = id;
             })
             .catch(error => {
                 this.haveAccessToProject = false
