@@ -1,6 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -18,9 +15,10 @@ import {AuthProvider} from "react-oidc-context";
 const oidcConfig = {
     authority: 'http://localhost:5001',
     client_id: 'react-client',
-    redirect_uri: 'http://localhost:3000/signin-oidc',
-    post_logout_redirect_uri: 'http://localhost:3000/signout-callback-oidc',
-    scope: 'openid profile project_management files',
+    redirect_uri: 'http://localhost:3000',
+    post_logout_redirect_uri: 'http://localhost:3000',
+    scope: 'openid profile email project_management files',
+    loadUserInfo: true,
     onSigninCallback: () => {
         window.history.replaceState({}, document.title, '/');
     }

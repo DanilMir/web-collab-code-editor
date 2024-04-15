@@ -1,6 +1,6 @@
 import './App.css';
 import NavBar from "./components/navigation/NavBar";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import NotFound from './pages/errors/NotFound';
 import {ProjectsListPage} from './pages/ProjectsListPage';
 import CreateProjectPage from "./pages/CreateProjectPage";
@@ -20,8 +20,7 @@ function App() {
                     <Route path="/projects/" element={<ProjectsListPage />} />
                     <Route path="/projects/create" element={<CreateProjectPage />} />
 
-
-                    <Route path='' element={<HomePage />} />
+                    <Route path='/' element={<HomePage />} />
                     <Route path='*' element={<NotFound />} />
                 </Routes>
             </BrowserRouter>

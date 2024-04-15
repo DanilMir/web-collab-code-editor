@@ -19,6 +19,7 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import {useRootStore} from "../../hooks/useRootStore";
 import {RestartAlt, Stop} from "@mui/icons-material";
 
+
 export default function NavBar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -46,7 +47,7 @@ export default function NavBar() {
 
     return (
         <AppBar position="static">
-            <Container maxWidth={false}>
+            <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <DataObjectIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
                     <Typography
@@ -126,7 +127,7 @@ export default function NavBar() {
                         CollabCodeEditor
                     </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        <Link to="/projects">
+                        <Link to="/projects" style={{ textDecoration: 'none' }}>
                             <Button
                                 onClick={handleCloseNavMenu}
                                 sx={{my: 2, color: 'white', display: 'block'}}
@@ -138,7 +139,7 @@ export default function NavBar() {
                             <IconButton
                                 onClick={handleCloseNavMenu}
                                 sx={{
-                                    mt: 2
+                                    mt: "13px",
                                 }}
                             >
                                 <AddCircleOutlineIcon sx={{color: "white"}}/>

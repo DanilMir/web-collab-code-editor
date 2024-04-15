@@ -4,11 +4,12 @@ import Box from '@mui/material/Box';
 import {observer} from "mobx-react";
 import {Navigate} from "react-router-dom";
 import LoginWarning from "../components/generic/LoginWarning";
+import Container from "@mui/material/Container";
 
 export const ProjectsListPage = observer(() => {
         const auth = useAuth();
 
-        if(auth.isLoading) {
+        if (auth.isLoading) {
             return null;
         }
 
@@ -18,11 +19,15 @@ export const ProjectsListPage = observer(() => {
 
         return (
             <>
-                <Box px={60} pt={4}>
-                    <div>
-                        <CustomPaginationActionsTable/>
-                    </div>
-                </Box>
+                <Container sx={{
+                    display: "flex",
+                    alignItems: "start",
+                    justifyContent: "center",
+                    flexDirection: 'column',
+                    paddingTop: 10
+                }}>
+                    <CustomPaginationActionsTable/>
+                </Container>
             </>
         )
     }

@@ -15,7 +15,6 @@ import Loading from "../components/generic/Loading";
 import BrowserIcon from "../components/icons/BrowserIcon"
 import Typography from "@mui/material/Typography";
 
-
 type Params = {
     id: string
 };
@@ -25,6 +24,7 @@ export const ProjectPage = observer(() => {
         const [tab, setTab] = useState<string>('1');
         const {projectStore, sandboxStore} = useRootStore();
         const auth = useAuth();
+
 
         const handleChange = (event: React.SyntheticEvent, newValue: string) => {
             setTab(newValue);
@@ -70,8 +70,8 @@ export const ProjectPage = observer(() => {
 
                     <Grid item xs={6}>
                         <CollaborativeEditor
-                            height="100vh"
-                            width="100wh"
+                            height="calc(100vh - 68.5px)"
+                            width="100%"
                             language={lang(projectStore.project.programmingLanguage)}
                             readOnly={false}
                             room={room}

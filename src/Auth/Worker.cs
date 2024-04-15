@@ -36,11 +36,11 @@ public class Worker : IHostedService
                 DisplayName = "React client",
                 RedirectUris =
                 {
-                    new Uri($"{uri}/signin-oidc")
+                    new Uri($"{uri}")
                 },
                 PostLogoutRedirectUris =
                 {
-                    new Uri($"{uri}/signout-callback-oidc")
+                    new Uri($"{uri}")
                 },
                 Permissions =
                 {
@@ -52,6 +52,8 @@ public class Worker : IHostedService
                     Permissions.ResponseTypes.Code,
                     Scopes.OpenId,
                     Scopes.OfflineAccess,
+                    Scopes.Email,
+                    Scopes.Profile,
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
