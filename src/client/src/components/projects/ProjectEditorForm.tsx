@@ -31,9 +31,7 @@ export default function ProjectEditorForm({handleSubmit, handleChange, formData,
 
     return (
         <>
-            <Container component="main" maxWidth="xs" sx={{paddingBottom: '20px'}}>
-                <CssBaseline/>
-
+            <Container component="main" maxWidth="xs" >
                 <Box style={{
                     marginTop: 8,
                     display: 'flex',
