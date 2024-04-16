@@ -4,19 +4,19 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Sandbox/Sandbox.csproj", "Sandbox/"]
-RUN dotnet restore "Sandbox/Sandbox.csproj"
+COPY ["Sandbox.csproj", "."]
+RUN dotnet restore "./Sandbox.csproj"
 COPY . .
-WORKDIR "/src/Sandbox"
-RUN dotnet build "Sandbox.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/."
+RUN dotnet build "Sandbox.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Sandbox.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Sandbox.csproj" -c Release -o /app/publish
 
 FROM base AS final
+
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "Sandbox.dll"]

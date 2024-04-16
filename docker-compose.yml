@@ -105,3 +105,16 @@ services:
       - Clients:Files:Url=http://file-service:80
     ports:
       - 5004:80
+
+  sandbox-service:
+    image: sandbox-service
+    build: ./src/SandBox
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Clients:FileService:Url=http://file-service:80
+      - Clients:ProjectManagement:Url=http://project-management:80
+      - StoragePath=/usr/local/storage/
+    ports:
+      - 5005:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
