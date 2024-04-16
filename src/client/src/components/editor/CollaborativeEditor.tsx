@@ -69,8 +69,6 @@ export default function CollaborativeEditor(props: Props) {
             });
 
             setAwarenessUsers(users);
-
-            console.log(users);
         }
 
         // // You can observe when a user updates their awareness information
