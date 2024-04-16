@@ -3,9 +3,6 @@ version: '3.9'
 services:
   minio:
     image: minio/minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
     environment:
       MINIO_ROOT_USER: user
       MINIO_ROOT_PASSWORD: password
@@ -63,12 +60,14 @@ services:
     ports:
       - "${CLIENT_EXTERNAL_PORT}:${CLIENT_PORT}"
 
-  y-websocket:
-    image: y-websocket
-    build: ./src/y-websocket/
+  sync-service:
+    image: sync-service
+    build: ./src/SyncService/
     environment:
-      - CALLBACK_URL=http://sync-service:80/sync/callback/
+      - CALLBACK_URL=http://localhost:4321
       - CALLBACK_OBJECTS={"monaco":"Text"}
+      - CALLBACK_DEBOUNCE_WAIT=10
+      - FILE_SERVICE_URL=http://file-service:80
     ports:
       - "${Y_WEBSOCKET_EXTERNAL_PORT}:${Y_WEBSOCKET_PORT}"
     
@@ -97,15 +96,6 @@ services:
     ports:
       - 5003:80
       
-  sync-service:
-    image: sync-service
-    build: ./src/SyncService
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - Clients:Files:Url=http://file-service:80
-    ports:
-      - 5004:80
-
   sandbox-service:
     image: sandbox-service
     build: ./src/Sandbox
@@ -118,3 +108,4 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     network_mode: "host"
+    
