@@ -28,12 +28,16 @@ export default class SandboxStore {
         this.isLoading = isLoading
     }
 
+    setActive(isActive: boolean) {
+        this.isActive = isActive
+    }
+
     runProject(projectId: string, token: string) {
         this.setLoading(true);
         this.sandboxRepository.runProject (projectId, token)
             .then(result => {
                 this.setSandbox(result.data)
-                this.isActive = true;
+                this.setActive(true);
             })
             .catch(error => {
                 console.log(error);
@@ -47,7 +51,7 @@ export default class SandboxStore {
         this.setLoading(true);
         this.sandboxRepository.deleteProject (projectId, token)
             .then(() => {
-                this.isActive = false;
+                this.setActive(false);
             })
             .catch(error => {
                 console.log(error);
@@ -58,11 +62,11 @@ export default class SandboxStore {
     }
 
     updateProject(projectId: string, token: string) {
-        this.isActive = false;
+        this.setActive(false);
         this.setLoading(true);
         this.sandboxRepository.updateProject(projectId, token)
             .then(result => {
-                this.isActive = true;
+                this.setActive(true);
                 this.setSandbox(result.data)
             })
             .catch(error => {

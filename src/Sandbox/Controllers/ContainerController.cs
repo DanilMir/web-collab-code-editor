@@ -48,9 +48,9 @@ public class ContainerController : Controller
             
             return Ok(result);
         }
-        catch
+        catch(Exception ex)
         {
-            return BadRequest();
+            return BadRequest(ex.Message);
         }
     }
     

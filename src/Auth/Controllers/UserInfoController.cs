@@ -38,11 +38,11 @@ public class UserInfoController : Controller
             [OpenIddictConstants.Claims.Subject] = await _userManager.GetUserIdAsync(user)
         };
 
-        if (User.HasScope(OpenIddictConstants.Permissions.Scopes.Email))
-        {
+        // if (User.HasScope(OpenIddictConstants.Permissions.Scopes.Email))
+        // {
             claims[OpenIddictConstants.Claims.Email] = (await _userManager.GetEmailAsync(user))!;
             claims[OpenIddictConstants.Claims.EmailVerified] = await _userManager.IsEmailConfirmedAsync(user);
-        }
+        // }
 
         if (User.HasScope(OpenIddictConstants.Permissions.Scopes.Phone))
         {

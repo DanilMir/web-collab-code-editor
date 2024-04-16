@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Terminal from "../components/remote-run/Terminal";
 import {useRootStore} from "../hooks/useRootStore";
 import {useAuth} from "react-oidc-context";
@@ -52,7 +52,7 @@ export const ProjectPage = observer(() => {
         // }
 
         function lang(language: string) {
-            switch(language) {
+            switch (language) {
                 case "csharp":
                     return "csharp";
                 default:
@@ -60,22 +60,35 @@ export const ProjectPage = observer(() => {
             }
         }
 
-        let room = `${id}::${GetRoomFile(projectStore.project.programmingLanguage)}`;
-
-        console.log(room);
 
         return (
             <>
                 <Grid container>
 
                     <Grid item xs={6}>
-                        <CollaborativeEditor
-                            height="calc(100vh - 68.5px)"
-                            width="100%"
-                            language={lang(projectStore.project.programmingLanguage)}
-                            readOnly={false}
-                            room={room}
-                        />
+                        {projectStore.project.programmingLanguage === undefined ?
+                            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <svg width={0} height={0}>
+                                    <defs>
+                                        <linearGradient id="my_gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" stopColor="#e11cd5"/>
+                                            <stop offset="100%" stopColor="#2CB5E0"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <CircularProgress sx={{'svg circle': {stroke: 'url(#my_gradient)'}}}/>
+                            </Box>
+                            :
+                            <CollaborativeEditor
+                                height="calc(100vh - 68.5px)"
+                                width="100%"
+                                language={lang(projectStore.project.programmingLanguage)}
+                                readOnly={false}
+                                room={`${id}::${GetRoomFile(projectStore.project.programmingLanguage)}`}
+                            />
+                        }
+
+
                     </Grid>
                     <Grid item xs={6}>
                         <TabContext value={tab}>

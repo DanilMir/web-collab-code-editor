@@ -14,7 +14,7 @@ export default class ProjectStore {
 
         makeAutoObservable(this)
         this.projectService = new ProjectService();
-        this.project = new ProjectEditorModel("", "", 0, "")
+        this.project = new ProjectEditorModel("", "", 0, undefined)
     }
 
     setLoading(isLoading: boolean) {

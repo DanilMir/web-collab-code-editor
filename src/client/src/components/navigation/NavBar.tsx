@@ -172,7 +172,7 @@ export default function NavBar() {
                                 sx={{my: 2, color: 'white',}}
                                 startIcon={<RestartAlt/>}
                             >
-                                Restart
+                                Rebuild
                             </Button>
                             <Button
                                 onClick={() => {

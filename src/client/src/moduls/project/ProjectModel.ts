@@ -5,6 +5,6 @@ export class ProjectEditorModel {
         public title: string,
         public description: string,
         public visibility: Visibility,
-        public programmingLanguage : string,
+        public programmingLanguage? : string,
     ){}
 }
