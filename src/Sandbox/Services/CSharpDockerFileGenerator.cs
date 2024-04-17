@@ -40,6 +40,6 @@ public class CSharpDockerFileGenerator : DockerFileGenerator
     
     private void StartProject(StringBuilder stringBuilder)
     {
-        stringBuilder.AppendLine("CMD [\"xterm\", \"-hold\", \"-e\", \"dotnet\", \"run\"]");
+        stringBuilder.AppendLine("CMD [\"xterm\" , \"-maximized\", \"-hold\", \"-e\", \"dotnet\", \"run\"]");
     }
 }

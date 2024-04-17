@@ -85,11 +85,9 @@ export default function CollaborativeEditor(props: Props) {
         "#" + (((1 << 24) * Math.random()) | 0).toString(16).padStart(6, "0"),
     });
 
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const binding = new MonacoBinding(
-      type,
-      editorRef.current.getModel(),
+      type, // @ts-ignore
+      editorRef.current.getModel(), // @ts-ignore
       new Set([editorRef.current]),
       awareness,
     );
