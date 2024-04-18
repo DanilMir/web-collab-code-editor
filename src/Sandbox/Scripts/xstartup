@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Disable screensaver and power management
+xset s off -dpms
+
+# Start XFCE
+exec startxfce4

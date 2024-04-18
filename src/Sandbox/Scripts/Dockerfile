@@ -1,13 +1,28 @@
-# Pull base image.
-FROM jlesage/baseimage-gui:alpine-3.19-v4.5.3
+# Используем базовый образ Alpine Linux
+FROM alpine:latest
 
-RUN install-glibc
+# Обновляем индексы пакетов и устанавливаем необходимые пакеты
+RUN apk update && \
+    apk add --no-cache xfce4 xfce4-terminal tigervnc supervisor wget openbox \
+    x11vnc xvfb dbus dbus-x11 novnc websockify bash
 
-# Install xterm.
-RUN add-pkg xterm
+# Устанавливаем NoVNC
+RUN wget -O noVNC.zip https://github.com/novnc/noVNC/archive/master.zip && \
+    unzip noVNC.zip && \
+    rm noVNC.zip && \
+    mv noVNC-master /opt/noVNC
 
-# Copy the start script.
-COPY startapp.sh /startapp.sh
+# Устанавливаем пароль для VNC
+RUN mkdir ~/.vnc
+RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
 
-# Set the name of the application.
-RUN set-cont-env APP_NAME "Xterm"   
+# Копируем конфигурационные файлы
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY xstartup /root/.vnc/xstartup
+
+# Открываем порты для NoVNC и VNC
+EXPOSE 8080
+EXPOSE 5900
+
+# Запускаем supervisord для управления процессами
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
