@@ -1,0 +1,52 @@
+FROM alpine:3.19
+
+# VNC port:5901
+# noVNC webport, connect via http://IP:6901/?password=vncpassword
+ENV DISPLAY=:1 \
+    VNC_PORT=5901 \
+    NO_VNC_PORT=6901
+EXPOSE $VNC_PORT $NO_VNC_PORT
+
+### Envrionment config
+ENV HOME=/headless \
+    TERM=xterm \
+    STARTUPDIR=/dockerstartup \
+    INST_SCRIPTS=/headless/install \
+    NO_VNC_HOME=/headless/noVNC \
+    DEBIAN_FRONTEND=noninteractive \
+    VNC_COL_DEPTH=24 \
+    VNC_RESOLUTION=1280x1024 \
+    VNC_PW=vncpassword \
+    VNC_VIEW_ONLY=false
+WORKDIR $HOME
+
+# update and install system software
+RUN apk --update --upgrade add --no-cache --update-cache openrc xset nss_wrapper gettext vim wget net-tools python3 bash procps busybox-extras py3-numpy git novnc tigervnc
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+RUN printf '\n# docker-headless-vnc-container:\n$localhost = "no";\n1;\n' >>/etc/tigervnc/vncserver-config-defaults
+
+#RUN novnc --listen 6081 --vnc localhost:5901 
+
+RUN apk add --no-cache supervisor xfce4 xfce4-terminal xterm dbus-x11 dbus-glib
+RUN apk del $(apk search screensaver)
+
+
+
+RUN echo "add 'source generate_container_user' to .bashrc"
+
+# have to be added to hold all env vars correctly
+RUN echo 'source $STARTUPDIR/generate_container_user' >> $HOME/.bashrc
+
+ADD vnc_startup.sh $STARTUPDIR/
+ADD generate_container_user $STARTUPDIR/
+ADD wm_startup.sh $HOME/
+ADD set_user_permission.sh $INST_SCRIPTS/
+
+RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
+
+RUN rm -rf /var/cache/apk/*
+
+
+ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
+CMD ["--wait"]
