@@ -3,7 +3,6 @@
 set -e
 set -u
 
-
 mkdir -p "$HOME/.vnc"
 
 echo "vncpassword" | vncpasswd -f >> ~/.vnc/passwd
@@ -19,7 +18,7 @@ echo '{:1=root}' > /etc/tigervnc/vncserver.users
 cat <<EOF >> /etc/tigervnc/vncserver-config-defaults
 session=xfce
 securitytypes=vncauth,tlsvnc
-geometry=1920x1080
+geometry=2000x1200
 localhost=no
 alwaysshared
 EOF
@@ -27,7 +26,7 @@ EOF
 cat <<EOF >> /etc/tigervnc/vncserver-config-mandatory
 session=xfce
 securitytypes=vncauth,tlsvnc
-geometry=1920x1080
+geometry=2000x1200
 localhost=no
 alwaysshared
 EOF
@@ -47,3 +46,5 @@ EndSection
 EOF
 
 printf "vncpassword\nvncpassword\n\n" | vncpasswd /etc/X11/vncpasswd
+
+ln -s vncserver /etc/init.d/vncserver.1
