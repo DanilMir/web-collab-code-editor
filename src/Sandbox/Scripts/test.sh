@@ -3,7 +3,10 @@ apk add --no-cache supervisor xfce4 xfce4-terminal xterm dbus-x11 dbus-glib open
 
 apk add --no-cache vim wget net-tools libc-utils bzip2 procps python3 py3-numpy
 
-apk add xorg-server xf86-input-libinput eudev mesa-dri-gallium
+# apk add xorg-server xf86-input-libinput eudev mesa-dri-gallium
+
+apk add alpine-conf
+setup-xorg-base
 
 mkdir -p "$HOME/.vnc"
 
@@ -17,16 +20,16 @@ echo 'DISPLAYS="root:1"' >> /etc/conf.d/vncserver
 
 echo '{:1=root}' > /etc/tigervnc/vncserver.users
 
-echo """session=xfce'
+echo """session=xfce
 securitytypes=vncauth,tlsvnc
 geometry=2000x1200
-localhost
+localhost=no
 alwaysshared""" > /etc/tigervnc/vncserver-config-defaults
 
-echo """session=xfce'
+echo """session=xfce
 securitytypes=vncauth,tlsvnc
 geometry=2000x1200
-localhost
+localhost=no
 alwaysshared""" > /etc/tigervnc/vncserver-config-mandatory
 
 
@@ -65,7 +68,6 @@ rc-service vncserver.1 start
 
 
 
-apk add alpine-conf
-setup-xorg-base
 
-apk update && apk add xorg-server xinit
+
+# apk update && apk add xorg-server xinit

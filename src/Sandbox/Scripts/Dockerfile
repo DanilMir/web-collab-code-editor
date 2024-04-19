@@ -1,28 +1,22 @@
 # Используем базовый образ Alpine Linux
-FROM alpine:latest
+FROM alpine:3.19
 
-# Обновляем индексы пакетов и устанавливаем необходимые пакеты
-RUN apk update && \
-    apk add --no-cache xfce4 xfce4-terminal tigervnc supervisor wget openbox \
-    x11vnc xvfb dbus dbus-x11 novnc websockify bash
 
-# Устанавливаем NoVNC
-RUN wget -O noVNC.zip https://github.com/novnc/noVNC/archive/master.zip && \
-    unzip noVNC.zip && \
-    rm noVNC.zip && \
-    mv noVNC-master /opt/noVNC
+RUN apk add --no-cache tigervnc novnc supervisor xfce4 xfce4-terminal xterm dbus-x11 dbus-glib openrc vim wget net-tools libc-utils bzip2 procps python3 py3-numpy
+RUN apk add xorg-server xf86-input-libinput eudev mesa-dri-gallium
 
-# Устанавливаем пароль для VNC
-RUN mkdir ~/.vnc
-RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
+# RUN apk add alpine-conf
+# RUN setup-xorg-base
+COPY config.sh .
 
-# Копируем конфигурационные файлы
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY xstartup /root/.vnc/xstartup
+RUN /config.sh
 
-# Открываем порты для NoVNC и VNC
-EXPOSE 8080
-EXPOSE 5900
+RUN openrc boot
+RUN  ln -s vncserver /etc/init.d/vncserver.1
+RUN rc-service vncserver.1 start || true
+
+
+EXPOSE 5901
 
 # Запускаем supervisord для управления процессами
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
