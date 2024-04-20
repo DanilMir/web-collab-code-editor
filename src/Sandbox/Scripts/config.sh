@@ -25,8 +25,8 @@ EOF
 
 cat <<EOF >> /etc/tigervnc/vncserver-config-mandatory
 session=xfce
-securitytypes=none
-geometry=1080x720
+securitytypes=vncauth,tlsvnc
+geometry=2000x1200
 localhost=no
 alwaysshared
 EOF
