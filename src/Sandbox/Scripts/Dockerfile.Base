@@ -7,4 +7,3 @@ RUN ./config.sh
 
 ENTRYPOINT [ "./startapp.sh" ]
 CMD ["/bin/sh"]
-# CMD xfce4-terminal -e 'sh -c "ls /usr/bin && read"' -T "Run and ready" --zoom=2  --maximize --fullscreen --hide-menubar --hide-borders  --hide-toolbar

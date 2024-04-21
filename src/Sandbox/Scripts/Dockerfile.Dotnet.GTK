@@ -1,0 +1,18 @@
+FROM sandbox-dotnet
+
+RUN mkdir ~/project 
+
+RUN cat <<EOF > ~/project/Project.csproj
+<Project Sdk="Microsoft.NET.Sdk"> 
+  <PropertyGroup> 
+    <OutputType>Exe</OutputType> 
+    <TargetFramework>net7.0</TargetFramework> 
+  </PropertyGroup> 
+  <ItemGroup> 
+    <PackageReference Include="GtkSharp" Version="3.24.24.95" /> 
+  </ItemGroup> 
+</Project> 
+EOF
+
+RUN cd ~/project && dotnet restore
+

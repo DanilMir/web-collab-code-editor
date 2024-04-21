@@ -1,4 +1,4 @@
-FROM sandbox-dotnet-console
+FROM sandbox-dotnet
 
 COPY ./temp ./project
 
