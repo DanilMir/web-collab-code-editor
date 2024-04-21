@@ -8,17 +8,11 @@ EXPOSE $VNC_PORT $NO_VNC_PORT
 WORKDIR $HOME
 
 RUN apk add --no-cache tigervnc novnc openrc xfce4 xfce4-terminal
-RUN apk add --no-cache dotnet7-sdk
-
+RUN rm -rf /var/cache/apk/*
 COPY --chmod=0755 config.sh .
 COPY --chmod=0755 startapp.sh .
 
-RUN /config.sh
-
-COPY ConsoleApp1.csproj /project/
-COPY Program.cs /project/
-
-RUN cd /project/ && dotnet build
+RUN ./config.sh
 
 ENTRYPOINT [ "./startapp.sh" ]
-CMD xfce4-terminal -e 'sh -c "cd /project/ && dotnet run && read"' -T "Run and ready" --zoom=2  --maximize --fullscreen --hide-menubar --hide-borders  --hide-toolbar
+CMD xfce4-terminal -e 'sh -c "ls /usr/bin && read"' -T "Run and ready" --zoom=2  --maximize --fullscreen --hide-menubar --hide-borders  --hide-toolbar
