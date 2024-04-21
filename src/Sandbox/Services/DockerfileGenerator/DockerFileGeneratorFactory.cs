@@ -1,6 +1,4 @@
-using Sandbox.Models;
-
-namespace Sandbox.Services;
+namespace Sandbox.Services.DockerfileGenerator;
 
 public class DockerFileGeneratorFactory : IDockerFileGeneratorFactory
 {
@@ -9,7 +7,8 @@ public class DockerFileGeneratorFactory : IDockerFileGeneratorFactory
         return projectType switch
         {
             // "python" => new TextFileCreator(),
-            "csharp" => new CSharpDockerFileGenerator(),
+            "csharp-gtk" => new CSharpGtkDockerFileGenerator(),
+            "csharp-console" => new CSharpConsoleDockerfileGenerator(),
             _ => throw new ArgumentException("Unsupported project type", nameof(projectType))
         };
     }

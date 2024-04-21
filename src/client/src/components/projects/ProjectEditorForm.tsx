@@ -103,7 +103,8 @@ export default function ProjectEditorForm({
                 value={formData.programmingLanguage}
                 onChange={handleChange}
               >
-                <MenuItem value="csharp">C#</MenuItem>
+                <MenuItem value="csharp-console">C# Console</MenuItem>
+                <MenuItem value="csharp-gtk">C# Gtk#</MenuItem>
                 <MenuItem value="python">Python</MenuItem>
               </Select>
             </FormControl>

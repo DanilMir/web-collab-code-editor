@@ -32,7 +32,7 @@ export default function Terminal(props: Props) {
     <>
       <VncScreen
         ref={sandboxRef}
-        url={`ws://localhost:${props.port}`}
+        url={`ws://localhost:${props.port}/vnc_lite.html`}
         scaleViewport
         style={{
           width: "50vw",

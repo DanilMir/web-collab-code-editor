@@ -24,24 +24,25 @@ export default class SandboxRepository {
     });
   }
 
-  deleteProject(projectId: string, token: string) {
+  deleteProject(containerName: string, token: string) {
     return this.apiClient.delete<SandboxModel>({
       url: `/containers`,
       config: {
         params: {
-          projectId: projectId,
+          containerName: containerName,
         },
         headers: { Authorization: `Bearer ${token}` },
       },
     });
   }
 
-  updateProject(projectId: string, token: string) {
+  updateProject(projectId: string, containerName: string, token: string) {
     return this.apiClient.put<SandboxModel>({
       url: `/containers`,
       config: {
         params: {
           projectId: projectId,
+          containerName: containerName,
         },
         headers: { Authorization: `Bearer ${token}` },
       },

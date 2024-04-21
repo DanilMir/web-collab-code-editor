@@ -20,4 +20,12 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Scripts\temp\bin\Debug\net7.0\Project.deps.json" />
+      <_ContentIncludedByDefault Remove="Scripts\temp\bin\Debug\net7.0\Project.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="Scripts\temp\obj\Debug\net7.0\Project.sourcelink.json" />
+      <_ContentIncludedByDefault Remove="Scripts\temp\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="Scripts\temp\obj\Project.csproj.nuget.dgspec.json" />
+    </ItemGroup>
+
 </Project>

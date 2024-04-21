@@ -10,7 +10,7 @@ export default class SandboxStore {
 
   constructor() {
     this.sandboxRepository = new SandboxRepository();
-    this.sandbox = new SandboxModel(0);
+    this.sandbox = new SandboxModel(0, "");
 
     makeAutoObservable(this, {
       setSandbox: action,
@@ -46,10 +46,10 @@ export default class SandboxStore {
       });
   }
 
-  deleteProject(projectId: string, token: string) {
+  deleteProject(containerName: string, token: string) {
     this.setLoading(true);
     this.sandboxRepository
-      .deleteProject(projectId, token)
+      .deleteProject(containerName, token)
       .then(() => {
         this.setActive(false);
       })
@@ -61,11 +61,11 @@ export default class SandboxStore {
       });
   }
 
-  updateProject(projectId: string, token: string) {
+  updateProject(projectId: string, containerName: string, token: string) {
     this.setActive(false);
     this.setLoading(true);
     this.sandboxRepository
-      .updateProject(projectId, token)
+      .updateProject(projectId, containerName, token)
       .then((result) => {
         this.setActive(true);
         this.setSandbox(result.data);
