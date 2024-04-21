@@ -3,48 +3,66 @@
 set -e
 set -u
 
-mkdir -p "$HOME/.vnc"
+rm -rfv /usr/share/xsessions/xfce.desktop
+rm -rfv /etc/X11/xinit/xinitrc
+rm -rfv /etc/X11/xinit/xinitrc.d
+rm -rfv /etc/xdg/xfce4/xinitrc
+rm -rfv /etc/xdg/autostart
 
-echo "vncpassword" | vncpasswd -f >> ~/.vnc/passwd
+# mkdir -p "$HOME/.vnc"
 
-chmod 600 ~/.vnc/passwd
+# echo "vncpassword" | vncpasswd -f >> ~/.vnc/passwd
 
-echo 'DISPLAYS="root:1"' >> /etc/conf.d/tigervnc
-echo 'DISPLAYS="root:1"' >> /etc/conf.d/vncserver
-
-echo '{:1=root}' > /etc/tigervnc/vncserver.users
-
-
-cat <<EOF >> /etc/tigervnc/vncserver-config-defaults
-session=xfce
-securitytypes=vncauth,tlsvnc
-geometry=2000x1200
-localhost=no
-alwaysshared
-EOF
-
-cat <<EOF >> /etc/tigervnc/vncserver-config-mandatory
-session=xfce
-securitytypes=vncauth,tlsvnc
-geometry=2000x1200
-localhost=no
-alwaysshared
-EOF
+# chmod 600 ~/.vnc/passwd
 
 
-mkdir -p /etc/X11/xorg.conf.d
 
 
-cat <<EOF >> /etc/X11/xorg.conf.d/40-vnc.conf
-Section "Module"
-	Load "vnc"
-EndSection
-Section "Screen"
-	Identifier "Default Screen"
-	Option "PasswordFile" "/etc/X11/vncpasswd"
-EndSection
-EOF
 
-printf "vncpassword\nvncpassword\n\n" | vncpasswd /etc/X11/vncpasswd
 
-ln -s vncserver /etc/init.d/vncserver.1
+
+
+
+
+
+
+
+# echo 'DISPLAYS="root:1"' >> /etc/conf.d/tigervnc
+# echo 'DISPLAYS="root:1"' >> /etc/conf.d/vncserver
+
+# echo '{:1=root}' > /etc/tigervnc/vncserver.users
+
+
+# cat <<EOF >> /etc/tigervnc/vncserver-config-defaults
+# session=xfce
+# securitytypes=vncauth,tlsvnc
+# geometry=2000x1200
+# localhost=no
+# alwaysshared
+# EOF
+
+# cat <<EOF >> /etc/tigervnc/vncserver-config-mandatory
+# session=xfce
+# securitytypes=vncauth,tlsvnc
+# geometry=2000x1200
+# localhost=no
+# alwaysshared
+# EOF
+
+
+# mkdir -p /etc/X11/xorg.conf.d
+
+
+# cat <<EOF >> /etc/X11/xorg.conf.d/40-vnc.conf
+# Section "Module"
+# 	Load "vnc"
+# EndSection
+# Section "Screen"
+# 	Identifier "Default Screen"
+# 	Option "PasswordFile" "/etc/X11/vncpasswd"
+# EndSection
+# EOF
+
+# printf "vncpassword\nvncpassword\n\n" | vncpasswd /etc/X11/vncpasswd
+
+#ln -s vncserver /etc/init.d/vncserver.1
