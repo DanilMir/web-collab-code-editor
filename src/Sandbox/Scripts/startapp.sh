@@ -1,16 +1,28 @@
 #!/bin/sh
 set -e # Exit immediately if a command exits with a non-zero status.
 
-# rm -f ~/.Xauthority
-# touch ~/.Xauthority
-# xauth generate :1 . trusted
-# xauth add ${HOST}:1 . $(xxd -l 16 -p /dev/urandom)
+cleanup () {
+    rc-service vncserver.1 stop 
+    rm -rfv /tmp/.X*-lock /tmp/.X11-unix
+    exit 0
+}
+trap cleanup SIGINT SIGTERM
 
-# /usr/bin/startxfce4 --replace
+mkdir -p "$HOME/.vnc"
+
+echo "vncpassword" | vncpasswd -f >> ~/.vnc/passwd
+
+chmod 600 ~/.vnc/passwd
+
+# rm -rfv /tmp/.X*-lock /tmp/.X11-unix
+
+
 openrc boot > openrc.log 2>&1
+ln -s vncserver /etc/init.d/vncserver.1
 rc-service vncserver.1 start > vncserver.log 2>&1
-websockify -D --web /usr/share/novnc/ 6901 localhost:5901 
+websockify -D --web /usr/share/novnc/ 6901 localhost:5901 > websockify.log 2>&1  
 
-DISPLAY=:1 exec "$@"
 
-tail -f *.log /var/log/vncserver.log
+DISPLAY=:1 exec "$@" > exec.log 2>&1
+
+wait $!
