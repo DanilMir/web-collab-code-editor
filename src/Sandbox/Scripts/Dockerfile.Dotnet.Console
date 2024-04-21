@@ -1,0 +1,3 @@
+FROM sandbox-base
+
+RUN apk add --no-cache dotnet7-sdk
