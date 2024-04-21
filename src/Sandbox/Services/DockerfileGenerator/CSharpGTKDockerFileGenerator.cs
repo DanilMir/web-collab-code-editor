@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Sandbox.Services.DockerfileGenerator;
 
-public class CSharpGTKDockerFileGenerator : DockerFileGenerator
+public class CSharpGtkDockerFileGenerator : DockerFileGenerator
 {
     public override byte[] GenerateDockerFile()
     {

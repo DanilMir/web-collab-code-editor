@@ -116,7 +116,14 @@ cat <<EOF > /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
 </channel>
 EOF
 
+mkdir -p "$HOME/.vnc"
+
+echo "vncpassword" | vncpasswd -f >> ~/.vnc/passwd
+
+chmod 600 ~/.vnc/passwd
 
 printf "vncpassword\nvncpassword\n\n" | vncpasswd /etc/X11/vncpasswd
 
 rm -rfv /tmp/.X*-lock /tmp/.X11-unix
+
+ln -s vncserver /etc/init.d/vncserver.1

@@ -21,15 +21,16 @@ public class ContainerService : IContainerService
     public async Task<ContainerRunResult> RunContainer(Guid projectId)
     {
         var dockerFilePath = $"{_absolutePath}projects/{projectId}/Dockerfile.tar.gz";
-        var imageName = projectId.ToString();
+        // var imageName = projectId.ToString();
+        var imageName = Guid.NewGuid().ToString();
         var imageTag = "latest";
 
-        var existsContainerPort = await GetPort(imageName);
-
-        if (existsContainerPort != null)
-        {
-            return new ContainerRunResult {Port = (int)existsContainerPort};
-        }
+        // var existsContainerPort = await GetPort(imageName);
+        //
+        // if (existsContainerPort != null)
+        // {
+        //     return new ContainerRunResult {Port = (int)existsContainerPort};
+        // }
 
         await CreateTarGZ(dockerFilePath, $"{_absolutePath}projects/{projectId}/");
         
@@ -50,8 +51,7 @@ public class ContainerService : IContainerService
             ExposedPorts = new Dictionary<string, EmptyStruct>
             {
                 { "6901", new EmptyStruct() }
-            },
-            Env = new List<string>() {"VNC_RESOLUTION=800x600"}
+            }
         });
         
         await _dockerClient.Containers.StartContainerAsync(
@@ -59,7 +59,7 @@ public class ContainerService : IContainerService
             new ContainerStartParameters()
         );
         
-        return new ContainerRunResult {Port = port};
+        return new ContainerRunResult {Port = port, ContainerName = imageName};
     }
 
     private async Task BuildImage(string dockerFilePath, string imageName, string imageTag, string projectId)
@@ -98,7 +98,7 @@ public class ContainerService : IContainerService
 
         var port = container.Ports.FirstOrDefault(item => item.PrivatePort == 6901);
 
-        if (port == null)
+        if (port == null || container.State != "running")
         {
             await _dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters { Force = true });
             return null;
@@ -174,15 +174,24 @@ public class ContainerService : IContainerService
         }
     }
 
-    public async Task StopDeleteContainer(Guid projectId)
+    public async Task StopDeleteContainer(Guid containerName)
     {
         var containers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters { All = true });
-        var container = containers.FirstOrDefault(c => c.Names.Contains($"/{projectId}"));
+        var container = containers.FirstOrDefault(c => c.Names.Contains($"/{containerName}"));
 
         if (container != null)
         {
-            await _dockerClient.Containers.StopContainerAsync(container.ID, new ContainerStopParameters());
-            await _dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters());
+            var solve = Task.Run(async () =>
+            {
+                await _dockerClient.Containers.KillContainerAsync(container.ID, new ContainerKillParameters());
+                await _dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters());
+            });
         }
+    }
+
+    private async Task Solve(string containerId)
+    {
+        await _dockerClient.Containers.KillContainerAsync(containerId, new ContainerKillParameters());
+        await _dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters());
     }
 }

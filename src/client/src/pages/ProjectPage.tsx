@@ -183,7 +183,8 @@ export const ProjectPage = observer(() => {
 
 function GetRoomFile(projectType: string) {
   switch (projectType) {
-    case "csharp":
+    case "csharp-console":
+    case "csharp-gtk":
       return "Program.cs";
   }
 }

@@ -13,7 +13,8 @@ public class ProjectGeneratorFactory : IProjectGeneratorFactory
     {
         return projectType switch
         {
-            "csharp" => new CSharpProjectGenerator(_filesService),
+            "csharp-gtk" => new CSharpGtkProjectGenerator(_filesService),
+            "csharp-console" => new CSharpConsoleProjectGenerator(_filesService),
             _ => throw new ArgumentException("Unsupported project type", nameof(projectType))
         };
     }

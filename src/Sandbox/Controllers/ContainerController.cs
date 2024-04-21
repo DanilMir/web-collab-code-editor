@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic.CompilerServices;
 using Sandbox.Models;
 using Sandbox.Services;
+using Sandbox.Services.DockerfileGenerator;
 
 namespace Sandbox.Controllers;
 
@@ -55,11 +56,11 @@ public class ContainerController : Controller
     }
     
     [HttpDelete]
-    public async Task<IActionResult> DeleteContainer(Guid projectId)
+    public async Task<IActionResult> DeleteContainer(Guid containerName)
     {
         try
         {
-            await _containerService.StopDeleteContainer(projectId);
+            await _containerService.StopDeleteContainer(containerName);
             return Ok();
         }
         catch
@@ -69,11 +70,11 @@ public class ContainerController : Controller
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateContainer(Guid projectId)
+    public async Task<IActionResult> UpdateContainer(Guid projectId, Guid containerName)
     {
         try
         {
-            await _containerService.StopDeleteContainer(projectId);
+            await _containerService.StopDeleteContainer(containerName);
             var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var project = await _projectManagement.GetProject(accessToken, projectId);
             await _projectFilesService.DownloadProject(projectId, accessToken);

@@ -1,4 +1,4 @@
-namespace Sandbox.Services;
+namespace Sandbox.Services.DockerfileGenerator;
 
 public interface IDockerFileGeneratorFactory
 {

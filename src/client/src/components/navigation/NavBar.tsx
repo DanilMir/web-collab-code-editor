@@ -180,6 +180,7 @@ export default function NavBar() {
                 onClick={() => {
                   sandboxStore.updateProject(
                     projectStore.currentId,
+                    sandboxStore.sandbox.containerName,
                     auth.user?.access_token!,
                   );
                   handleCloseUserMenu();
@@ -194,7 +195,7 @@ export default function NavBar() {
               <Button
                 onClick={() => {
                   sandboxStore.deleteProject(
-                    projectStore.currentId,
+                    sandboxStore.sandbox.containerName,
                     auth.user?.access_token!,
                   );
                   handleCloseUserMenu();

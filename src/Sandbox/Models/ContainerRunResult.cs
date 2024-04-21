@@ -2,5 +2,8 @@ namespace Sandbox.Models;
 
 public class ContainerRunResult
 {
-    public int Port { get; set; }
+    
+    public required int Port { get; set; }
+    
+    public required string ContainerName { get; set; }
 }

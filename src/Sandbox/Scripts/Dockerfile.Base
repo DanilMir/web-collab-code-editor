@@ -1,9 +1,10 @@
 FROM alpine:3.19
 
 RUN apk add --no-cache tigervnc novnc openrc xfce4 xfce4-terminal
-COPY --chmod=0755 startapp.sh config.sh ./
+COPY --chmod=0755 startapp.sh /root/.
+COPY --chmod=0755 config.sh .
 
 RUN ./config.sh
 
-ENTRYPOINT [ "./startapp.sh" ]
+ENTRYPOINT [ "/root/startapp.sh" ]
 CMD ["/bin/sh"]
