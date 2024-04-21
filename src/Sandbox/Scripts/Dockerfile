@@ -10,19 +10,17 @@ EXPOSE $VNC_PORT $NO_VNC_PORT
 WORKDIR $HOME
 
 RUN apk add --no-cache tigervnc novnc openrc xfce4 xterm xfce4-terminal
-RUN apk add --no-cache dotnet7-sdk 
+RUN apk add --no-cache xset bash
 
 COPY --chmod=0755 config.sh .
 COPY --chmod=0755 startapp.sh .
 
 RUN /config.sh
 
-COPY Program.cs /project/
-COPY ConsoleApp1.csproj /project/
+# COPY Program.cs /project/
+# COPY ConsoleApp1.csproj /project/
 
-RUN cd /project/ && dotnet build
-
-EXPOSE 6901
+# RUN cd /project/ && dotnet build
 
 ENTRYPOINT [ "./startapp.sh" ]
-CMD [ "/usr/bin/xterm", "-hold", "-e", "cd", "project", "&&", "dotnet", "run"]
+CMD [ "/usr/bin/xterm", "-hold", "-e", "sh -c 'cd && exec pwd'"]
