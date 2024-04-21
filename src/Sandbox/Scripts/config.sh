@@ -3,20 +3,16 @@
 set -e
 set -u
 
-
-
 echo 'DISPLAYS="root:1"' >> /etc/conf.d/tigervnc
 echo 'DISPLAYS="root:1"' >> /etc/conf.d/vncserver
 
 echo '{:1=root}' > /etc/tigervnc/vncserver.users
-
 
 cat <<EOF >> /etc/tigervnc/vncserver-config-defaults
 session=xfce
 securitytypes=none
 geometry=1080x720
 localhost=no
-alwaysshared
 EOF
 
 cat <<EOF >> /etc/tigervnc/vncserver-config-mandatory
@@ -24,7 +20,6 @@ session=xfce
 securitytypes=none
 geometry=1080x720
 localhost=no
-alwaysshared
 EOF
 
 
@@ -78,7 +73,6 @@ cat <<EOF > /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-session.xml
   </property>
 </channel>
 EOF
-
 
 printf "vncpassword\nvncpassword\n\n" | vncpasswd /etc/X11/vncpasswd
 

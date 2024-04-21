@@ -1,0 +1,6 @@
+FROM sandbox-dotnet-console
+
+COPY ./temp ./project
+
+CMD xfce4-terminal -e 'sh -c "DOTNET_NOLOGO=true dotnet run --tl off --project ./project && read"' \
+    --zoom=2  --maximize --fullscreen --hide-menubar --hide-borders  --hide-toolbar
