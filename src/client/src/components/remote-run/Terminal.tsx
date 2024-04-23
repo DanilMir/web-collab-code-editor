@@ -75,7 +75,6 @@ export default function Terminal(props: Props) {
         }
         autoConnect={true}
         retryDuration={10000}
-        rfbOptions={{ credentials: { password: "vncpassword" } }}
       />
     </>
   );

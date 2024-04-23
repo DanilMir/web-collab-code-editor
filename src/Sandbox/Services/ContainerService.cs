@@ -184,7 +184,7 @@ public class ContainerService : IContainerService
             var solve = Task.Run(async () =>
             {
                 await _dockerClient.Containers.KillContainerAsync(container.ID, new ContainerKillParameters());
-                await _dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters());
+                await _dockerClient.Containers.RemoveContainerAsync(container.Image, new ContainerRemoveParameters());
             });
         }
     }

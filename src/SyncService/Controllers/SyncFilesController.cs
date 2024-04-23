@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using SyncService.Models;
 using SyncService.Services;
@@ -15,15 +16,26 @@ public class SyncFilesController : Controller
         _filesService = filesService;
     }
 
-    [HttpPost]
-    [Route("sync/callback")]
-    public async Task<IActionResult> Callback(CallbackRequestModel callbackRequestModel)
-    {
-        Console.WriteLine($"test: {callbackRequestModel.Room}");
-        var (projectId, prefix, fileName) = ParseRoom(callbackRequestModel.Room);
-        await _filesService.UploadFile(projectId, prefix, fileName, Encoding.ASCII.GetBytes(callbackRequestModel.Data.Monaco.Content));
-        return Ok();
-    }
+    // [HttpPost]
+    // [DisableRequestSizeLimit]
+    // [Route("sync/callback")]
+    // public async Task<IActionResult> Callback()
+    // {
+    //     string bodyAsString;
+    //     Request.EnableBuffering();
+    //     using (var streamReader = new StreamReader(Request.Body, Encoding.UTF8))
+    //     {
+    //         bodyAsString = await streamReader.ReadToEndAsync();
+    //     }
+    //
+    //
+    //     Console.WriteLine(bodyAsString);
+    //     
+    //     // Console.WriteLine($"test: {callbackRequestModel.Room}");
+    //     // var (projectId, prefix, fileName) = ParseRoom(callbackRequestModel.Room);
+    //     // await _filesService.UploadFile(projectId, prefix, fileName, Encoding.ASCII.GetBytes(callbackRequestModel.Data.Monaco.Content));
+    //     return Ok();
+    // }
     
     private static (string, string, string) ParseRoom(string room)
     {
