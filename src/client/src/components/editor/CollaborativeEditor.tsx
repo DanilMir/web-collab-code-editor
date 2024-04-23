@@ -29,6 +29,7 @@ export default function CollaborativeEditor(props: Props) {
     new Map<number, User>(),
   );
   const auth = useAuth();
+  console.log(props.room, props.width, props.language);
 
   // Insert awareness info into cursors with styles
 

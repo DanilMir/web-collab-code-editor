@@ -51,7 +51,8 @@ export const ProjectPage = observer(() => {
 
   function lang(language: string) {
     switch (language) {
-      case "csharp":
+      case "csharp-console":
+      case "csharp-gtk":
         return "csharp";
       default:
         return "plaintext";
@@ -182,6 +183,7 @@ export const ProjectPage = observer(() => {
 });
 
 function GetRoomFile(projectType: string) {
+  console.log(projectType);
   switch (projectType) {
     case "csharp-console":
     case "csharp-gtk":

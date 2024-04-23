@@ -31,6 +31,6 @@ public class CSharpGtkDockerFileGenerator : DockerFileGenerator
     
     private void StartProject(StringBuilder stringBuilder)
     {
-        stringBuilder.AppendLine("CMD sh -c \"dotnet run --no-restore --no-build --project ./project && read\"");
+        stringBuilder.AppendLine("CMD dotnet run && read");
     }
 }
