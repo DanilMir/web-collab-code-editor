@@ -70,6 +70,7 @@ services:
       - FILE_SERVICE_URL=http://file-service:80
     ports:
       - "${Y_WEBSOCKET_EXTERNAL_PORT}:${Y_WEBSOCKET_PORT}"
+      - "4321:4321"
     
   project-management:
     image: project-management
