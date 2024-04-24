@@ -73,4 +73,4 @@
 
 ## Sync
 
-* /callback - get updates from y-websocket
+* /callback - get updates from sync-service
