@@ -18,7 +18,7 @@ workspace {
                 auth = container "Auth Service" {
                     description "User authentication and authorization service."
                     tags "backend, c-sharp"
-                    technology "ASP.NET Core"                    
+                    technology "C# ASP.NET Core"                    
                 }
 
                 authDb = container "Auth Database" {
@@ -27,9 +27,9 @@ workspace {
                 }
                 
                 projectsManagement = container "Projects Management Service" {
-                    description "Service for creating and managing code projects."
+                    description "Service for creating and managing projects."
                     tags "backend, c-sharp"
-                    technology "ASP.NET Core"  
+                    technology "C# ASP.NET Core"  
                 }
 
                 projectsDb = container "Projects Management Database" {
@@ -40,7 +40,7 @@ workspace {
                 files = container "Files Service" {
                     description "Service for file uploading, downloading, processing"
                     tags "backend, c-sharp"
-                    technology "ASP.NET Core"
+                    technology "C# ASP.NET Core"
                 }
 
                 s3 = container "S3 Service" {
@@ -48,37 +48,37 @@ workspace {
                     technology "Minio"
                 }
                 
-                collab = container "Collab Service" {
+                collab = container "Sync Service" {
                     description "Synchronization of code changes in real-time."
-                    tags "backend, c-sharp"
-                    technology "ASP.NET Core"        
+                    tags "backend, golang"
+                    technology "Golang + y-websocket"        
                 }
                                 
-                virtual = container "Virtual Environments Service" {
+                virtual = container "Sandbox" {
                     description "Isolated execution environments for code."
                     tags "backend, c-sharp"
-                    technology "ASP.NET Core"        
+                    technology "C# ASP.NET Core"        
                 }
                 
                 apiGateway = container "API Gateway" {
                     description "Gateway for managing and exposing API endpoints."
-                    technology "API Gateway"
-                    tags "API, Gateway"
+                    technology "Nginx"
+                    tags "API, Gateway, nginx"
                 }
 
 
                 files -> s3
                 projectsManagement -> files "Manage project source code"
-                projectsManagement -> virtual "Send project code"
+                files -> virtual "Send project code"
                 auth -> authDb "Save credentials"
                 projectsManagement -> projectsDb "Save projects info"
                 collab -> files "Sync code with storage"
-                auth -> files "Upload user profile picture"
                 
                 apiGateway -> files
                 apiGateway -> auth
                 apiGateway -> collab
                 apiGateway -> projectsManagement    
+                apiGateway -> virtual    
         }
 
         webClient -> apiGateway
@@ -94,7 +94,7 @@ workspace {
 
         container softwareSystem "Containers"{
             include *
-            autoLayout lr
+            # autoLayout lr
         }
 
 
@@ -104,6 +104,7 @@ workspace {
                 color "#3b48cc"
                 background "#ffffff"
                 shape cylinder
+                fontSize 34
             }
 
             element cloud {
@@ -111,6 +112,7 @@ workspace {
                 color "#3b48cc"
                 background "#ffffff"
                 shape Folder
+                fontSize 34
             }
 
             element backend {
@@ -121,6 +123,7 @@ workspace {
 
                 stroke "#3b48cc"
                 strokeWidth 3
+                fontSize 34
             }
 
             element frontend {
@@ -128,44 +131,24 @@ workspace {
                 color "#3b48cc"
                 background "#ffffff"
                 shape WebBrowser
+                fontSize 34
             }
 
-            element postgres {
-                icon "icons/postgre.png"
-            }
-
-            element c-sharp {
-                icon "icons/c-sharp.png"
-            }
-
-            element redis {
-                icon "icons/redis.png"
-            }
-
-            element rabbitmq {
-                icon "icons/RabbitMQ.png"
-            }
-
-            element react {
-                icon "icons/react.png"
-            }
 
             element nginx {
                 color "#000000"
                 stroke "#32CD32"
                 strokeWidth 10
                 background "#ffffff"
-                icon "icons/nginx.png"
+
                 shape hexagon
+                fontSize 34
             }
 
-            element "Message Bus" {
-                width 1600
-                Shape Pipe
-            }
 
             relationship "Relationship" {
                 # routing Orthogonal
+                fontSize 34
             }
         }
 
