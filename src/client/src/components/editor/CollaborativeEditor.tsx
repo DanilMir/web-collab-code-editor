@@ -101,7 +101,7 @@ export default function CollaborativeEditor(props: Props) {
         height={props.height}
         width={props.width}
         language={props.language}
-        defaultValue="\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        defaultValue=""
         options={{ readOnly: props.readOnly }} //TODO: readOnly: false, if only read access granted
         onMount={handleEditorDidMount}
         theme="vs-dark"

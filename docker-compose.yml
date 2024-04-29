@@ -3,9 +3,6 @@ version: '3.9'
 services:
   minio:
     image: minio/minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
     environment:
       MINIO_ROOT_USER: user
       MINIO_ROOT_PASSWORD: password
@@ -73,7 +70,6 @@ services:
       - FILE_SERVICE_URL=http://file-service:80
     ports:
       - "${Y_WEBSOCKET_EXTERNAL_PORT}:${Y_WEBSOCKET_PORT}"
-      - "4321:4321"
     
   project-management:
     image: project-management
