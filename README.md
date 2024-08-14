@@ -1,76 +1,46 @@
 # Сollab Сode Editor
 
-## API
+**Collab Code Editor** is an collaborative online code editor designed to support real-time code execution across multiple programming languages.
 
-### Управление проектами
-
-- **GET /projects**
-  - Получение всех проектов пользователя
-  - *Параметры запроса:*
-    - `offset` (необязательный) - смещение результатов запроса
-    - `limit` (необязательный) - ограничение количества возвращаемых проектов
-   
-
-- **GET /projects/{id}**
-  - Получение информации о конкретном проекте по его идентификатору
-
-- **POST /projects**
-  - Создание нового проекта
-
-- **PUT /projects/{id}**
-  - Обновление информации о проекте по его идентификатору
-
-- **DELETE /projects/{id}**
-  - Удаление проекта по его идентификатору
+![image](https://github.com/user-attachments/assets/ead617d9-3024-4cf0-ad78-f9c332ca2dd7)
 
 
-### Доступы
+## Features
 
-- **GET /projects/{projectId}/accesses**
-  - Получение всех разрешений доступа проекта
-  - *Параметры запроса:*
-    - `offset` (необязательный) - смещение результатов запроса
-    - `limit` (необязательный) - ограничение количества возвращаемых проектов
+- **Multi-Language Support**. Write and execute code in multiple programming languages within a single environment.
+- **Real-Time Collaboration**. Simultaneously edit code with other users, with changes synchronized in real-time.
+- **Graphic Application Execution**. Run and interact with graphical applications in an isolated environment using VNC and Docker.
+- **Scalable Infrastructure**. Built on containerization and cloud technologies like Docker and Kubernetes, the platform ensures robust performance and high availability.
+- **Project Management**. Create, manage, and collaborate on projects with ease through a user-friendly interface.
+- **Authentication and Authorization**. Secure user management with integrated authentication and authorization mechanisms.
 
-- **GET /projects/{projectId}/accesses/{accessId}**
-  - Получение информации о конкретном доступе по его идентификатору
+## Architecture
 
-- **POST /projects/{projectId}/accesses**
-  - Создание нового доступа
-
-- **PUT /projects/{projectId}/accesses/{accessId}**
-  - Обновление информации о доступе по его идентификатору
-
-- **DELETE /projects/{projectId}/accesses/{accessId}**
-  - Удаление доступа по его идентификатору
+![Architecture](https://github.com/user-attachments/assets/cd3df1cc-e21e-4d9e-8f37-b618d5ab1d00)
 
 
-### Файлы
+The project utilizes a **microservices** architecture, ensuring modularity and scalability. Key components include.
+
+- **Web Client**. Frontend providing an interactive interface for users to create, edit, and manage projects.
+- **Project Management Service**. Handles project creation, updates, and access control.
+- **Sync Service**. Ensures that code changes are instantly synchronized across all connected users.
+- **File Service**. Manages file uploads, downloads, and storage using an S3-compatible solution.
+- **Sandbox Service**. Provides isolated environments for code execution using Docker and VNC, supporting graphical outputs.
+- **Authentication Service**. Manages user authentication and authorization, ensuring secure access to the platform.
+
+## Technologies Used
+
+- **Frontend**. Built with React, TypeScript and Monaco Editor.
+- **Backend**. C# with ASP.NET Core, Golang.
+- **Database**. PostgreSQL.
+- **Synchronization**. WebSocket and y-websocket libraries.
+- **Authentication**. Secure user authentication and authorization through OpenIddict integrated with ASP.NET Core.
+- **File Management**. Minio S3-compatible storage.
+- **Execution Environments**. Docker containers with integrated VNC for graphical application support.
+
+## Demonstration
 
 
-1. **Загрузка файла в репозиторий:**
-   - **POST /projects/{projectId}/files/**
-     - Загружает новый файл в проект.
-     - *Параметры запроса:*
-       - `prefix` (необязательный) - префикс для фильтрации файлов
-       - `file` - файл для загрузки
 
-2. **Получение списка файлов в бакете:**
-   - **GET /projects/{projectId}/files/**
-     - Возвращает список всех файлов в указанном проекте.
-     - *Параметры запроса:*
-       - `prefix` (необязательный) - префикс для фильтрации файлов
-       - `limit` (необязательный) - ограничение количества возвращаемых файлов
+https://github.com/user-attachments/assets/64601168-7683-4175-ad2d-dd6a7926a248
 
-3. **Получение информации о файле:**
-   - **GET /projects/{projectId}/files/{fileId}**
-     - Возвращает файл из указанного проекта по его идентификатору.
-
-4. **Удаление файла из бакета:**
-   - **DELETE /projects/{projectId}/files/{fileId}**
-     - Удаляет конкретный файл из указанного проекта по его идентификатору.
-
-
-## Sync
-
-* /callback - get updates from sync-service
