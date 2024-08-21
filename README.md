@@ -1,6 +1,6 @@
 # Сollab Сode Editor
 
-**Collab Code Editor** is a collaborative online code editor designed to support real-time code execution in multiple programming languages with the ability to build and run graphical applications.
+**Collab Code Editor** is an online collaborative code editor that allows multiple users to work together on code projects in real time, with the ability to create and run console and graphical applications.
 
 ![image](https://github.com/user-attachments/assets/ead617d9-3024-4cf0-ad78-f9c332ca2dd7)
 
