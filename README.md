@@ -40,7 +40,5 @@ The project utilizes a **microservices** architecture, ensuring modularity and s
 
 ## Demonstration
 
-
-
 https://github.com/user-attachments/assets/64601168-7683-4175-ad2d-dd6a7926a248
 
